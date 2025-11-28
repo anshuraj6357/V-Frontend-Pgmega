@@ -8,11 +8,16 @@ export default function Header({ onAuthClick, showHome = false }) {
 
         {/* Logo Section */}
         <Link to="/" className="flex items-center space-x-3 group">
-          <img
-            src="/WhatsApp Image 2025-11-28 at 02.07.04_536bdc08.jpg"
-            alt="Logo"
-            className="h-12 w-auto object-contain rounded-xl shadow-sm transition-transform group-hover:scale-105"
-          />
+    <Link to="/" className="flex items-center space-x-3 group">
+  <img
+    src="/WhatsApp_Image_2025-11-28_at_2.07.04_AM-removebg-preview (1).png"
+    alt="Logo"
+    className="h-20 w-auto object-contain transition-transform group-hover:scale-105"
+
+  />
+</Link>
+
+
 
           <span className="text-3xl font-semibold tracking-tight text-gray-900 group-hover:text-blue-600 transition-all">
             ROOMGI

@@ -1,5 +1,7 @@
 import { Home, User } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import logo from "../assets/logo.png";
+
 
 export default function Header({ onAuthClick, showHome = false }) {
   return (
@@ -10,8 +12,8 @@ export default function Header({ onAuthClick, showHome = false }) {
         <Link to="/" className="flex items-center space-x-3 group">
     <Link to="/" className="flex items-center space-x-3 group">
   <img
-    src="/WhatsApp_Image_2025-11-28_at_2.07.04_AM-removebg-preview (1).png"
-    alt="Logo"
+    src={logo}
+  alt="Logo"
     className="h-20 w-auto object-contain transition-transform group-hover:scale-105"
 
   />

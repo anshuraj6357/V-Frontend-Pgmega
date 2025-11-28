@@ -1,13 +1,15 @@
 import { X } from "lucide-react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
   useRegisterUserMutation,
   useLoginUserMutation
-} from "../components/features/api/authapi";
-import { userLoggedin } from "../components/features/authSlice";
+} from "../Bothfeatures/features/api/authapi";
+import { userLoggedin } from "../Bothfeatures/features/authSlice";
 
 export default function AuthModal({ isOpen, onClose }) {
+  const navigate=useNavigate()
   const [isSignUp, setIsSignUp] = useState(false);
   const dispatch = useDispatch();
 
@@ -54,6 +56,12 @@ export default function AuthModal({ isOpen, onClose }) {
         alert(res.message || "Logged in successfully!");
         dispatch(userLoggedin({ user: res.existingUser }));
         localStorage.setItem("user", JSON.stringify(res.existingUser));
+        if(res.existingUser.role=="user"){
+          navigate("/")
+        }
+        else {
+          navigate("/admin/properties")
+        }
       }
 
       onClose();

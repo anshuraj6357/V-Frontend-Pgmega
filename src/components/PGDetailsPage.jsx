@@ -12,7 +12,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import AuthModal from "../components/AuthModal";
 
-import { useGetPgByIdQuery } from "../components/features/api/allpg.js";
+import { useGetPgByIdQuery } from "../Bothfeatures/features/api/allpg.js";
 
 export default function PGDetailsPage() {
   const { id } = useParams();

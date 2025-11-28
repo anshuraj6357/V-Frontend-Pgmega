@@ -1,24 +1,21 @@
 import { Routes, Route } from 'react-router-dom';
-import { useDispatch } from "react-redux";
-import { hydrateUser } from "./components/features/authSlice"; 
 import LandingPage from './components/LandingPage';
 import PGDetailsPage from './components/PGDetailsPage';
+import AdminApp from "./admin/AdminApp";
+import { useDispatch } from "react-redux";
+import { hydrateUser } from "./Bothfeatures/features/authSlice"; 
 import { useEffect } from "react";
 
 function App() {
-
   const dispatch = useDispatch();
 
   useEffect(() => {
     const user = localStorage.getItem("user");
-
     if (user) {
-      dispatch(
-        hydrateUser({
-          user: JSON.parse(user),
-          isAuthenticated: true,
-        })
-      );
+      dispatch(hydrateUser({
+        user: JSON.parse(user),
+        isAuthenticated: true,
+      }));
     }
   }, [dispatch]);
 
@@ -26,6 +23,9 @@ function App() {
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/pg/:id" element={<PGDetailsPage />} />
+
+      {/* ADMIN ROUTES */}
+      <Route path="/admin/*" element={<AdminApp />} />
     </Routes>
   );
 }

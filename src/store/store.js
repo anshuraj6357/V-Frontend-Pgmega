@@ -1,40 +1,82 @@
 import { configureStore } from "@reduxjs/toolkit";
-import authReducer, { hydrateUser } from "../components/features/authSlice";
-import { PgApi } from "../components/features/api/allpg";
-import authApi  from "../components/features/api/authapi";
+import authReducer, { hydrateUser } from "../Bothfeatures/features/authSlice";
+
+import { PgApi } from "../Bothfeatures/features/api/allpg";
+import authApi from "../Bothfeatures/features/api/authapi";
+
+import tenantReducer from "../Bothfeatures/notpaidtenantslice";
+import paymentApi from "../Bothfeatures/features2/api/paymentapi.js";
+import purchaseApi from "../Bothfeatures/features2/api/purchaseapi.js";
+import propertyApi from "../Bothfeatures/features2/api/propertyapi.js";
+import TenantApi from "../Bothfeatures/features2/api/tenant.js";
+import AnalysisApi from "../Bothfeatures/features2/api/analysisapi.js";
+import staffApi from "../Bothfeatures/features2/api/staffapi.js";
+import ComplainApi from "../Bothfeatures/features2/api/complainapi.js";
 
 
-
-
+// -------------------------------
+// CONFIGURE STORE
+// -------------------------------
 export const appStore = configureStore({
   reducer: {
-      auth: authReducer,
- 
+    auth: authReducer,
+    tenants: tenantReducer,
+
     [PgApi.reducerPath]: PgApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
+    [purchaseApi.reducerPath]: purchaseApi.reducer,
+    [propertyApi.reducerPath]: propertyApi.reducer,
+    [TenantApi.reducerPath]: TenantApi.reducer,
+    [AnalysisApi.reducerPath]: AnalysisApi.reducer,
+    [ComplainApi.reducerPath]: ComplainApi.reducer,
+    [staffApi.reducerPath]: staffApi.reducer,
+    [paymentApi.reducerPath]: paymentApi.reducer,
   },
+
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(authApi.middleware, PgApi.middleware),
+    getDefaultMiddleware().concat(
+      PgApi.middleware,
+      authApi.middleware,
+      paymentApi.middleware,
+      purchaseApi.middleware,
+      propertyApi.middleware,
+      TenantApi.middleware,
+      AnalysisApi.middleware,
+      ComplainApi.middleware,
+      staffApi.middleware
+    ),
 });
 
 
-const initializeUser = () => {
-  const storedUser = localStorage.getItem("user");
-  if (!storedUser) return { user: null, isAuthenticated: false };
 
+// -------------------------------
+// HYDRATE USER FROM LOCAL STORAGE
+// -------------------------------
+const initializeUser = () => {
   try {
+    const storedUser = localStorage.getItem("user");
+
+    if (!storedUser) {
+      return { user: null, isAuthenticated: false };
+    }
+
     const parsedUser = JSON.parse(storedUser);
-    const isValidUser = parsedUser && Object.keys(parsedUser).length > 0;
+
+    if (!parsedUser || typeof parsedUser !== "object") {
+      return { user: null, isAuthenticated: false };
+    }
+
     return {
-      user: isValidUser ? parsedUser : null,
-      isAuthenticated: isValidUser,
+      user: parsedUser,
+      isAuthenticated: true,
     };
+
   } catch (err) {
     console.error("Failed to parse stored user:", err);
     return { user: null, isAuthenticated: false };
   }
 };
 
-const initialUserState = initializeUser();
-appStore.dispatch(hydrateUser(initialUserState));
+const initialState = initializeUser();
+appStore.dispatch(hydrateUser(initialState));
 

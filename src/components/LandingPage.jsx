@@ -4,10 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import AuthModal from '../components/AuthModal';
-import pgData from '../data/pgData.json';
+
 import {
   useGetAllListedPgQuery,
-} from "../components/features/api/allpg.js";
+} from "../Bothfeatures/features/api/allpg.js";
 
 
 

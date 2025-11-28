@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useLogoutUserMutation } from "../components/features/api/authapi";
-import { userLoggedout, hydrateUser } from "../components/features/authSlice";
+import { useLogoutUserMutation } from "../Bothfeatures/features/api/authapi";
+import { userLoggedout, hydrateUser } from "../Bothfeatures/features/authSlice";
 
 export default function Header({ onAuthClick, showHome = false }) {
   const [openDropdown, setOpenDropdown] = useState(false);

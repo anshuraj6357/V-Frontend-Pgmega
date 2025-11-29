@@ -167,7 +167,7 @@ export default function PGDetailsPage() {
               <Action
                 icon={<Phone />}
                 label="whatsapp owner"
-                phoneNumber="+91-9693915693"
+                whatsappNumber="+91-9693915693"
               />
 
               <Action icon={<Navigation />} onClick={handleGetDirections} label="Get Directions" />
@@ -200,12 +200,9 @@ function Price({ label, value }) {
       <span className="font-semibold">₹{value}</span>
     </div>
   );
-} function Action({ icon, label, onClick, phoneNumber, whatsappNumber }) {
+} function Action({ icon, label, onClick, whatsappNumber }) {
   const handleClick = () => {
-    if (phoneNumber) {
-      // Make a call
-      window.location.href = `tel:${phoneNumber}`;
-    } else if (whatsappNumber) {
+    if (whatsappNumber) {
       // Open WhatsApp chat
       const message = encodeURIComponent("Hello, I am interested in your PG.");
       window.open(`https://wa.me/${whatsappNumber}?text=${message}`, "_blank");

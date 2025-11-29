@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 // Base URL for all complaint-related API calls
-const USER_API = "http://localhost:5000/api/complain/";
+const USER_API = "https://admin-backend-pgmega.onrender.com/api/complain/";
 // const USER_API = import.meta.env.VITE_REACT_APP_COURSEAPI;
 
 const ComplainApi = createApi({

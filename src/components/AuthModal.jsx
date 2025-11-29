@@ -9,7 +9,6 @@ import {
 import { userLoggedin } from "../Bothfeatures/features/authSlice";
 
 export default function AuthModal({ isOpen, onClose }) {
-  const navigate=useNavigate()
   const [isSignUp, setIsSignUp] = useState(false);
   const dispatch = useDispatch();
 
@@ -20,6 +19,7 @@ export default function AuthModal({ isOpen, onClose }) {
     phone: "",
     role: ""
   });
+  const navigate=useNavigate()
 
   const [registerUser] = useRegisterUserMutation();
   const [loginUser] = useLoginUserMutation();
@@ -41,6 +41,7 @@ export default function AuthModal({ isOpen, onClose }) {
           alert("Please fill all fields");
           return;
         }
+        console.log("formData",formData)
         const res = await registerUser(formData).unwrap();
         alert(res.message || "Registered successfully!");
         // Optionally log in automatically after signup
@@ -56,10 +57,7 @@ export default function AuthModal({ isOpen, onClose }) {
         alert(res.message || "Logged in successfully!");
         dispatch(userLoggedin({ user: res.existingUser }));
         localStorage.setItem("user", JSON.stringify(res.existingUser));
-        if(res.existingUser.role=="user"){
-          navigate("/")
-        }
-        else {
+        if(res.role!="user"){
           navigate("/admin/properties")
         }
       }
@@ -98,7 +96,7 @@ export default function AuthModal({ isOpen, onClose }) {
                 Full Name
               </label>
               <input
-                name="fullName"
+                name="username"
                 value={formData.username}
                 onChange={handleChange}
                 type="text"
@@ -148,7 +146,8 @@ export default function AuthModal({ isOpen, onClose }) {
             >
               <option value="">Choose a role</option>
               <option value="user">User</option>
-              <option value="pg-owner">PG Owner</option>
+              <option value="owner">PG Owner</option>
+              <option value="branch-manager">Branch-manager</option>
             </select>
           </div>
 

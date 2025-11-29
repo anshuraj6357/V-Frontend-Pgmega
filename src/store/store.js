@@ -6,7 +6,7 @@ import authApi from "../Bothfeatures/features/api/authapi";
 
 import tenantReducer from "../Bothfeatures/notpaidtenantslice";
 import paymentApi from "../Bothfeatures/features2/api/paymentapi.js";
-import purchaseApi from "../Bothfeatures/features2/api/purchaseapi.js";
+
 import propertyApi from "../Bothfeatures/features2/api/propertyapi.js";
 import TenantApi from "../Bothfeatures/features2/api/tenant.js";
 import AnalysisApi from "../Bothfeatures/features2/api/analysisapi.js";
@@ -24,7 +24,7 @@ export const appStore = configureStore({
 
     [PgApi.reducerPath]: PgApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
-    [purchaseApi.reducerPath]: purchaseApi.reducer,
+   
     [propertyApi.reducerPath]: propertyApi.reducer,
     [TenantApi.reducerPath]: TenantApi.reducer,
     [AnalysisApi.reducerPath]: AnalysisApi.reducer,
@@ -38,7 +38,7 @@ export const appStore = configureStore({
       PgApi.middleware,
       authApi.middleware,
       paymentApi.middleware,
-      purchaseApi.middleware,
+    
       propertyApi.middleware,
       TenantApi.middleware,
       AnalysisApi.middleware,

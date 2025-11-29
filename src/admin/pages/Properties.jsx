@@ -75,6 +75,8 @@ export default function Properties() {
     state: "",
     pincode: "",
     city: "",
+    streetAdress: "",
+    landmark: "",
     images: [],
     previewImages: [],
   });
@@ -116,6 +118,9 @@ export default function Properties() {
     payload.append("city", formData.city);
     payload.append("state", formData.state);
     payload.append("pincode", formData.pincode);
+    payload.append("streetAdress", formData.streetAdress);
+    payload.append("landmark", formData.landmark);
+
 
     formData.images.forEach((file) => {
       payload.append("images", file);
@@ -165,7 +170,7 @@ export default function Properties() {
 
         {user?.role === "branch-manager" && (
           <button
-            onClick={() => navigate("/addroom")}
+            onClick={() => navigate("/admin/addroom")}
             className="flex items-center gap-2 bg-[#ff6b35] text-white px-6 py-3 rounded-xl"
           >
             <Plus /> Add Room
@@ -380,6 +385,26 @@ export default function Properties() {
                 onChange={handlePropertyChange}
                 required
               />
+              <input
+                type="text"
+                name="streetAdress"
+                placeholder="Street Address"
+                className="w-full border p-2 rounded-xl"
+                value={formData.streetAdress}
+                onChange={handlePropertyChange}
+                required
+              />
+
+              <input
+                type="text"
+                name="landmark"
+                placeholder="Landmark"
+                className="w-full border p-2 rounded-xl"
+                value={formData.landmark}
+                onChange={handlePropertyChange}
+                required
+              />
+
 
               {/* Image Upload */}
               <div>

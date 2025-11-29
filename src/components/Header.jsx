@@ -20,16 +20,23 @@ export default function Header({ onAuthClick, showHome = false }) {
 
   // Hydrate user from localStorage
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      if (parsedUser) {
-        dispatch(hydrateUser({ user: parsedUser, isAuthenticated: true }));
+    const raw = localStorage.getItem("user");
+
+    try {
+      const parsed = raw ? JSON.parse(raw) : null;
+
+      if (parsed) {
+        dispatch(hydrateUser({ user: parsed, isAuthenticated: true }));
+      } else {
+        dispatch(userLoggedout());
       }
-    } else {
+    } catch (e) {
+      console.error("Invalid stored user JSON:", raw);
+      localStorage.removeItem("user");
       dispatch(userLoggedout());
     }
   }, [dispatch]);
+
 
   // Logout handler
   const handleLogout = async () => {

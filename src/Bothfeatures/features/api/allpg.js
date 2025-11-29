@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const PgApi = createApi({
     reducerPath: "PgApi",
     baseQuery: fetchBaseQuery({
-        baseUrl: "https://admin-backend-pgmega.onrender.com/api/property/",
+        baseUrl: "http://localhost:5000/api/property/",
         credentials: "include",
     }),
     endpoints: (builder) => ({
@@ -14,12 +14,18 @@ export const PgApi = createApi({
                 method: "GET",
             }),
         }),
+        getMapPg: builder.query({
+            query: () => ({
+                url: "/getmapofpg",
+                method: "GET",
+            }),
+        }),
 
 
         getPgById: builder.query({
             query: (id) => ({
                 url: `get/${id}`,
-               
+
             }),
         }),
         appliedAllFiltered: builder.mutation({
@@ -40,6 +46,7 @@ export const PgApi = createApi({
 });
 
 export const {
+    useGetMapPgQuery,
     useAppliedAllFilteredMutation,
     useGetAllFilteredQuery,
     useGetAllListedPgQuery,

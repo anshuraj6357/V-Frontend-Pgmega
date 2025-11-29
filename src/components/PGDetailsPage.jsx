@@ -1,33 +1,61 @@
+
+
+
+// ✅ All hooks must be placed at the top level
 import { useState, useEffect, useMemo } from "react";
-import { useParams } from "react-router-dom";
-import {
-  Phone,
-  Navigation,
-  Share2,
-  Star,
-  BadgeCheck,
-} from "lucide-react";
+import { useParams, useNavigate } from "react-router-dom";
+import { Phone, Navigation, Share2, Star, BadgeCheck } from "lucide-react";
 
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import AuthModal from "../components/AuthModal";
-
 import { useGetPgByIdQuery } from "../Bothfeatures/features/api/allpg.js";
 
 export default function PGDetailsPage() {
+  const navigate = useNavigate();
   const { id } = useParams();
-
-  // ✅ All hooks must be placed at the top level
   const { data, isLoading, isError } = useGetPgByIdQuery(id);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
 
-  useEffect(() => {
-    if (data) console.log("Fetched Data:", data);
-  }, [data]);
+  const [userLocation, setUserLocation] = useState({ lat: null, lng: null });
+  function share() {
+    if (navigator.share) {
+      const url = window.location.href;
 
-  // ❌ Don't return early BEFORE all hooks
-  // So we use conditional variables instead
+      console.log("ii")
+      navigator.share({
+        title: "Check this out!",
+        text: "I found something interesting on this site.",
+        url,
+      })
+
+    }
+    else {
+      alert("your browser is not supported")
+    }
+  }
+
+
+  // Get user location when component mounts
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+        (err) => {
+          console.error("Error getting user location:", err);
+          alert("Could not get your location. Enable location services.");
+        }
+      );
+    } else {
+      alert("Geolocation is not supported by your browser.");
+    }
+  }, []);
 
   const pg = data?.room;
 
@@ -38,15 +66,22 @@ export default function PGDetailsPage() {
     return [...branchImages, ...roomImages];
   }, [pg]);
 
-  // Now we safely return UI conditions below
+  const handleGetDirections = () => {
+    if (!pg?.branch?.location?.coordinates?.[0] || !pg?.branch?.location?.coordinates?.[1]) {
+      alert("PG location is not available.");
+      return;
+    }
+    if (!userLocation.lat || !userLocation.lng) {
+      alert("User location not available yet.");
+      return;
+    }
 
-  if (isLoading) {
-    return <p className="text-center p-6">Loading PG Details...</p>;
-  }
+    const url = `https://www.google.com/maps/dir/?api=1&origin=${userLocation.lat},${userLocation.lng}&destination=${pg?.branch?.location?.coordinates?.[1]},${pg?.branch?.location?.coordinates?.[0]}&travelmode=driving`;
+    window.open(url, "_blank");
+  };
 
-  if (isError || !pg) {
-    return <p className="text-center p-6">Error fetching PG details!</p>;
-  }
+  if (isLoading) return <p className="text-center p-6">Loading PG Details...</p>;
+  if (isError || !pg) return <p className="text-center p-6">Error fetching PG details!</p>;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -60,22 +95,14 @@ export default function PGDetailsPage() {
             alt="Property"
             className="w-full h-full object-cover"
           />
-
           <button
-            onClick={() =>
-              setImageIndex((prev) =>
-                prev === 0 ? allImages.length - 1 : prev - 1
-              )
-            }
+            onClick={() => setImageIndex((prev) => (prev === 0 ? allImages.length - 1 : prev - 1))}
             className="absolute left-4 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow"
           >
             ‹
           </button>
-
           <button
-            onClick={() =>
-              setImageIndex((prev) => (prev + 1) % allImages.length)
-            }
+            onClick={() => setImageIndex((prev) => (prev + 1) % allImages.length)}
             className="absolute right-4 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow"
           >
             ›
@@ -87,37 +114,23 @@ export default function PGDetailsPage() {
           <div className="lg:col-span-2 space-y-6">
             {/* BASIC INFO */}
             <div className="bg-white p-6 rounded-xl shadow">
-              <h1 className="text-3xl font-bold text-gray-900">
-                {pg.branch.name}
-              </h1>
-
+              <h1 className="text-3xl font-bold text-gray-900">{pg.branch.name}</h1>
               <div className="flex items-center space-x-4 mt-2">
                 <div className="flex items-center">
                   <Star className="w-5 h-5 text-yellow-500" />
                   <span className="ml-1 font-semibold">{pg.rating || 0}</span>
                 </div>
-
                 <div className="flex items-center text-green-600">
                   <BadgeCheck className="w-5 h-5 mr-1" />
                   <span className="text-sm font-medium">Verified</span>
                 </div>
               </div>
-
               <p className="text-gray-600 mt-4">{pg.branch.address}</p>
-
-              <div className="grid grid-cols-2 gap-4 mt-6">
-                <Info label="City" value={pg.city} />
-                <Info label="State" value={pg.branch.state} />
-                <Info label="Category" value={pg.category} />
-                <Info label="Gender" value={pg.gender} />
-                <Info label="Room Number" value={pg.roomNumber} />
-              </div>
             </div>
 
             {/* FACILITIES */}
             <div className="bg-white p-6 rounded-xl shadow">
               <h2 className="text-xl font-bold mb-4">Facilities</h2>
-
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {(pg.facilities || []).map((item, i) => (
                   <div key={i} className="flex items-center space-x-2">
@@ -125,20 +138,14 @@ export default function PGDetailsPage() {
                     <span>{item}</span>
                   </div>
                 ))}
-
-                {pg.facilities?.length === 0 && (
-                  <p className="text-gray-500">No facilities available</p>
-                )}
+                {pg.facilities?.length === 0 && <p className="text-gray-500">No facilities available</p>}
               </div>
             </div>
           </div>
 
           {/* RIGHT SIDE */}
           <div className="bg-white p-6 rounded-xl shadow sticky top-24 h-fit">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              Rent Breakdown
-            </h2>
-
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Rent Breakdown</h2>
             {pg.category === "Pg" ? (
               <Price label="Rent per Month" value={pg.price} />
             ) : (
@@ -157,24 +164,26 @@ export default function PGDetailsPage() {
             </button>
 
             <div className="flex flex-col mt-6 space-y-3">
-              <Action icon={<Phone />} label="Call Owner" />
-              <Action icon={<Navigation />} label="Get Directions" />
-              <Action icon={<Share2 />} label="Share PG" />
+              <Action
+                icon={<Phone />}
+                label="whatsapp owner"
+                phoneNumber="+91-9693915693"
+              />
+
+              <Action icon={<Navigation />} onClick={handleGetDirections} label="Get Directions" />
+              <Action icon={<Share2 />} onClick={() => share()} label="Share PG" />
             </div>
           </div>
         </div>
       </div>
 
       <Footer />
-
-      <AuthModal
-        isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
-      />
+      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
     </div>
   );
 }
 
+// Helper components remain the same
 function Info({ label, value }) {
   return (
     <div>
@@ -191,11 +200,25 @@ function Price({ label, value }) {
       <span className="font-semibold">₹{value}</span>
     </div>
   );
-}
+} function Action({ icon, label, onClick, phoneNumber, whatsappNumber }) {
+  const handleClick = () => {
+    if (phoneNumber) {
+      // Make a call
+      window.location.href = `tel:${phoneNumber}`;
+    } else if (whatsappNumber) {
+      // Open WhatsApp chat
+      const message = encodeURIComponent("Hello, I am interested in your PG.");
+      window.open(`https://wa.me/${whatsappNumber}?text=${message}`, "_blank");
+    } else if (onClick) {
+      onClick();
+    }
+  };
 
-function Action({ icon, label }) {
   return (
-    <button className="flex items-center gap-3 p-3 border rounded-lg">
+    <button
+      onClick={handleClick}
+      className="flex items-center gap-3 p-3 border rounded-lg"
+    >
       {icon}
       <span>{label}</span>
     </button>

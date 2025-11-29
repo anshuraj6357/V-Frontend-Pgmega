@@ -1,10 +1,12 @@
-import { Home, User, Menu } from "lucide-react";
+import { Home, User, Menu, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
+
 import logo from "../assets/logo.png";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLogoutUserMutation } from "../Bothfeatures/features/api/authapi";
 import { userLoggedout, hydrateUser } from "../Bothfeatures/features/authSlice";
+import { toast } from "react-toastify";
 
 export default function Header({ onAuthClick, showHome = false }) {
   const [openDropdown, setOpenDropdown] = useState(false);
@@ -16,7 +18,7 @@ export default function Header({ onAuthClick, showHome = false }) {
   const dispatch = useDispatch();
   const { user, isAuthenticated } = useSelector((state) => state.auth);
 
-  const [logoutUser] = useLogoutUserMutation();
+  const [logoutUser, { isLoading, iserror }] = useLogoutUserMutation();
 
   // Hydrate user from localStorage
   useEffect(() => {
@@ -45,7 +47,7 @@ export default function Header({ onAuthClick, showHome = false }) {
       dispatch(userLoggedout());
       localStorage.removeItem("user");
       setOpenDropdown(false);
-      alert("Logged out successfully");
+      toast.success("Logged out successfully");
     } catch (err) {
       console.log("Logout error:", err);
     }
@@ -103,8 +105,16 @@ export default function Header({ onAuthClick, showHome = false }) {
                   <button
                     onClick={handleLogout}
                     className="w-full px-4 py-2 text-red-600 hover:bg-gray-100 text-left"
-                  >
-                    Logout
+                  >{
+                      isLoading ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        </>
+                      ) : (
+                        <>Logout</>
+                      )
+                    }
+
                   </button>
                 </div>
               )}
@@ -130,16 +140,6 @@ export default function Header({ onAuthClick, showHome = false }) {
       {/* Mobile Dropdown */}
       {mobileMenu && (
         <div className="md:hidden px-6 pb-4 space-y-4 animate-slideDown">
-          <input
-            type="text"
-            placeholder="Search rooms, PGs..."
-            className="w-full px-4 py-2 bg-gray-100 rounded-xl"
-          />
-
-          <button className="block w-full text-left px-4 py-2 bg-gray-100 rounded-lg">
-            Select City
-          </button>
-
           {isAuthenticated ? (
             <>
               <button className="block w-full text-left px-4 py-2">Profile</button>

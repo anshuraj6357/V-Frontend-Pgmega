@@ -1,10 +1,8 @@
-
-
-
-// ✅ All hooks must be placed at the top level
 import { useState, useEffect, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Phone, Navigation, Share2, Star, BadgeCheck } from "lucide-react";
+import { Phone, Navigation, Share2, Star, BadgeCheck, Loader2 } from "lucide-react";
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -13,49 +11,13 @@ import { useGetPgByIdQuery } from "../Bothfeatures/features/api/allpg.js";
 
 export default function PGDetailsPage() {
   const navigate = useNavigate();
+  const { user, isAuthenticated } = useSelector((state) => state.auth);
   const { id } = useParams();
   const { data, isLoading, isError } = useGetPgByIdQuery(id);
+
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
-
   const [userLocation, setUserLocation] = useState({ lat: null, lng: null });
-  function share() {
-    if (navigator.share) {
-      const url = window.location.href;
-
-      console.log("ii")
-      navigator.share({
-        title: "Check this out!",
-        text: "I found something interesting on this site.",
-        url,
-      })
-
-    }
-    else {
-      alert("your browser is not supported")
-    }
-  }
-
-
-  // Get user location when component mounts
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setUserLocation({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          });
-        },
-        (err) => {
-          console.error("Error getting user location:", err);
-          alert("Could not get your location. Enable location services.");
-        }
-      );
-    } else {
-      alert("Geolocation is not supported by your browser.");
-    }
-  }, []);
 
   const pg = data?.room;
 
@@ -66,86 +28,139 @@ export default function PGDetailsPage() {
     return [...branchImages, ...roomImages];
   }, [pg]);
 
-  const handleGetDirections = () => {
-    if (!pg?.branch?.location?.coordinates?.[0] || !pg?.branch?.location?.coordinates?.[1]) {
-      alert("PG location is not available.");
-      return;
+  // GET USER LOCATION
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+        () => toast.warning("Enable location to get directions")
+      );
     }
-    if (!userLocation.lat || !userLocation.lng) {
-      alert("User location not available yet.");
-      return;
-    }
+  }, []);
 
-    const url = `https://www.google.com/maps/dir/?api=1&origin=${userLocation.lat},${userLocation.lng}&destination=${pg?.branch?.location?.coordinates?.[1]},${pg?.branch?.location?.coordinates?.[0]}&travelmode=driving`;
+  // BOOKING
+  const handleBook = () => {
+    if (isAuthenticated) {
+      setIsAuthModalOpen(true);
+    } else {
+      toast.info("Please Login to book PG");
+    }
+  };
+
+  // MAP DIRECTIONS
+  const handleGetDirections = () => {
+    const [lng, lat] = pg?.branch?.location?.coordinates || [];
+
+    if (!lat || !lng) return toast.error("PG location missing");
+    if (!userLocation.lat) return toast.error("User location not available");
+
+    const url = `https://www.google.com/maps/dir/?api=1&origin=${userLocation.lat},${userLocation.lng}&destination=${lat},${lng}&travelmode=driving`;
+
     window.open(url, "_blank");
   };
 
-  if (isLoading) return <p className="text-center p-6">Loading PG Details...</p>;
-  if (isError || !pg) return <p className="text-center p-6">Error fetching PG details!</p>;
+  // SHARE PG
+  const sharePG = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: "Check this PG",
+        text: "I found an amazing PG!",
+        url: window.location.href,
+      });
+    } else {
+      toast.info("Browser does not support sharing");
+    }
+  };
+
+  // LOADING UI
+  if (isLoading)
+    return (
+      <div className="flex flex-col items-center justify-center h-[60vh]">
+        <Loader2 className="w-12 h-12 animate-spin text-blue-600 mb-3" />
+        <p className="text-gray-700 text-lg font-medium">Fetching PG details...</p>
+      </div>
+    );
+
+  if (isError || !pg)
+    return (
+      <div className="flex flex-col items-center justify-center h-[60vh]">
+        <p className="text-red-500 text-lg font-semibold">Error loading PG!</p>
+      </div>
+    );
 
   return (
     <div className="min-h-screen bg-gray-50">
       <Header onAuthClick={() => setIsAuthModalOpen(true)} showHome />
 
       <div className="max-w-6xl mx-auto px-4 py-8">
-        {/* IMAGE CAROUSEL */}
+        {/* IMAGE SLIDER */}
         <div className="relative h-80 rounded-lg overflow-hidden shadow-lg mb-8">
-          <img
-            src={allImages[imageIndex]}
-            alt="Property"
-            className="w-full h-full object-cover"
-          />
+          <img src={allImages[imageIndex]} alt="PG" className="w-full h-full object-cover" />
+
+          {/* left btn */}
           <button
-            onClick={() => setImageIndex((prev) => (prev === 0 ? allImages.length - 1 : prev - 1))}
-            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow"
+            onClick={() =>
+              setImageIndex((prev) => (prev === 0 ? allImages.length - 1 : prev - 1))
+            }
+            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow hover:bg-gray-100"
           >
             ‹
           </button>
+
+          {/* right btn */}
           <button
             onClick={() => setImageIndex((prev) => (prev + 1) % allImages.length)}
-            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow"
+            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow hover:bg-gray-100"
           >
             ›
           </button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* LEFT SIDE */}
+          {/* LEFT */}
           <div className="lg:col-span-2 space-y-6">
             {/* BASIC INFO */}
             <div className="bg-white p-6 rounded-xl shadow">
               <h1 className="text-3xl font-bold text-gray-900">{pg.branch.name}</h1>
+
               <div className="flex items-center space-x-4 mt-2">
                 <div className="flex items-center">
                   <Star className="w-5 h-5 text-yellow-500" />
-                  <span className="ml-1 font-semibold">{pg.rating || 0}</span>
+                  <span className="ml-1 font-semibold">{pg.rating}</span>
                 </div>
                 <div className="flex items-center text-green-600">
                   <BadgeCheck className="w-5 h-5 mr-1" />
-                  <span className="text-sm font-medium">Verified</span>
+                  <span className="text-sm">Verified</span>
                 </div>
               </div>
+
               <p className="text-gray-600 mt-4">{pg.branch.address}</p>
             </div>
 
             {/* FACILITIES */}
             <div className="bg-white p-6 rounded-xl shadow">
               <h2 className="text-xl font-bold mb-4">Facilities</h2>
+
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {(pg.facilities || []).map((item, i) => (
-                  <div key={i} className="flex items-center space-x-2">
-                    <span className="text-green-600">✔</span>
-                    <span>{item}</span>
+                {pg.facilities?.map((item, i) => (
+                  <div key={i} className="flex items-center gap-2 bg-gray-100 p-2 rounded-md">
+                    <span className="text-green-600 font-bold">✔</span>
+                    <span className="text-gray-700">{item}</span>
                   </div>
                 ))}
-                {pg.facilities?.length === 0 && <p className="text-gray-500">No facilities available</p>}
               </div>
             </div>
           </div>
 
-          {/* RIGHT SIDE */}
-          <div className="bg-white p-6 rounded-xl shadow sticky top-24 h-fit">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Rent Breakdown</h2>
+          {/* RIGHT */}
+          <div className="bg-white p-6 rounded-xl shadow sticky top-24 space-y-4">
+            <h2 className="text-2xl font-bold text-gray-900">Rent Breakdown</h2>
+
             {pg.category === "Pg" ? (
               <Price label="Rent per Month" value={pg.price} />
             ) : (
@@ -156,22 +171,46 @@ export default function PGDetailsPage() {
               </>
             )}
 
+            {/* BOOK BUTTON */}
             <button
-              onClick={() => setIsAuthModalOpen(true)}
-              className="w-full bg-blue-600 text-white py-3 rounded-lg mt-6 text-lg font-medium"
+              onClick={handleBook}
+              disabled={!isAuthenticated}
+              className={`w-full py-3 rounded-lg mt-4 text-lg font-medium transition 
+    ${isAuthenticated
+                  ? "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
+                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                }
+  `}
             >
-              Book Now
+              {isAuthenticated ? "Book Now" : "Login to Book"}
             </button>
 
-            <div className="flex flex-col mt-6 space-y-3">
+
+            {/* ACTION BUTTONS */}
+            <div className="flex flex-col mt-4 space-y-3">
               <Action
                 icon={<Phone />}
-                label="whatsapp owner"
-                whatsappNumber="+91-9693915693"
+                label="WhatsApp Owner"
+                disabled={!isAuthenticated}
+                whatsappNumber={pg.branch.phone}
               />
 
-              <Action icon={<Navigation />} onClick={handleGetDirections} label="Get Directions" />
-              <Action icon={<Share2 />} onClick={() => share()} label="Share PG" />
+              {/* {!isAuthenticated && (
+                <p className="text-sm text-red-500 text-center">
+                  Login to contact owner
+                </p>
+              )} */}
+
+              <Action icon={<Navigation />}
+                label="Get Directions"
+                onClick={handleGetDirections}
+                disabled={!isAuthenticated}
+              />
+              <Action icon={<Share2 />}
+                label="Share PG"
+                onClick={sharePG}
+                disabled={!isAuthenticated}
+              />
             </div>
           </div>
         </div>
@@ -183,41 +222,38 @@ export default function PGDetailsPage() {
   );
 }
 
-// Helper components remain the same
-function Info({ label, value }) {
+// PRICE
+function Price({ label, value }) {
   return (
-    <div>
-      <p className="text-gray-500 text-sm">{label}</p>
-      <p className="font-medium text-gray-900">{value || "N/A"}</p>
+    <div className="flex justify-between border-b py-2">
+      <span className="text-gray-600">{label}</span>
+      <span className="font-semibold">₹{value}</span>
     </div>
   );
 }
 
-function Price({ label, value }) {
-  return (
-    <div className="flex justify-between border-b py-2">
-      <span className="text-gray-600">{label}:</span>
-      <span className="font-semibold">₹{value}</span>
-    </div>
-  );
-} function Action({ icon, label, onClick, whatsappNumber }) {
+// ACTION BUTTON
+function Action({ icon, label, onClick, whatsappNumber, disabled }) {
   const handleClick = () => {
+    if (disabled) return toast.error("Please login first");
+
     if (whatsappNumber) {
-      // Open WhatsApp chat
-      const message = encodeURIComponent("Hello, I am interested in your PG.");
-      window.open(`https://wa.me/${whatsappNumber}?text=${message}`, "_blank");
-    } else if (onClick) {
-      onClick();
+      const msg = encodeURIComponent("Hello, I'm interested in your PG");
+      window.open(`https://wa.me/${whatsappNumber}?text=${msg}`, "_blank");
+      return;
     }
+
+    if (onClick) onClick();
   };
 
   return (
     <button
       onClick={handleClick}
-      className="flex items-center gap-3 p-3 border rounded-lg"
+      className={`flex items-center gap-3 p-3 border rounded-lg shadow-sm transition ${disabled ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-100"
+        }`}
     >
       {icon}
-      <span>{label}</span>
+      <span className="font-medium">{label}</span>
     </button>
   );
 }

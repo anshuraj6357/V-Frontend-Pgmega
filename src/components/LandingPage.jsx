@@ -56,7 +56,7 @@ export default function LandingPage() {
 
       {/* HERO */}
       <div
-       className="relative bg-cover bg-center h-[550px]"
+        className="relative bg-cover bg-center h-[550px]"
         style={{
           backgroundImage:
             'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(https://images.pexels.com/photos/1457842/pexels-photo-1457842.jpeg?auto=compress&cs=tinysrgb&w=1260)',
@@ -97,8 +97,8 @@ export default function LandingPage() {
       </div>
       {
         isLoading ? <><div className="min-h-screen bg-gray-50">
-        <Loader />
-      </div></> : <div className="max-w-7xl mx-auto px-4 py-8">
+          <Loader />
+        </div></> : <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {pgData?.length > 0 ? (
               pgData.map((pg) => (
@@ -139,7 +139,11 @@ export default function LandingPage() {
 
 
                     <div className="flex items-center mt-3">
-                      ⭐ <span className="text-gray-700 ml-1">{pg?.rating}</span>
+                      {
+                        pg?.rating > 0 ? <>null</> : <>⭐ <span className="text-gray-700 ml-1">{pg?.rating}</span></>
+
+                      }
+
                     </div>
 
                     <button

@@ -1,7 +1,12 @@
 import { Mail, Phone, MapPin, Globe } from "lucide-react";
+import { useSelector } from "react-redux";
+import Footer from "./Footer";
+
 
 export default function ContactUs() {
-  return (
+  const { user } = useSelector((state) => state.auth); // get user from redux
+  const role = user?.role; // default role if no user
+  return (<>
     <div className="max-w-3xl mx-auto px-6 py-12">
       {/* Heading */}
       <h1 className="text-3xl font-bold text-gray-900 mb-6">
@@ -56,9 +61,9 @@ export default function ContactUs() {
 
         {/* Website */}
         <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition cursor-pointer">
-          <a 
-            href="https://www.roomgi.com" 
-            target="_blank" 
+          <a
+            href="https://www.roomgi.com"
+            target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-4"
           >
@@ -78,6 +83,12 @@ export default function ContactUs() {
         </p>
 
       </div>
+
     </div>
+
+    {
+      role !== "user" ? <Footer /> : <></>
+    }</>
+
   );
 }

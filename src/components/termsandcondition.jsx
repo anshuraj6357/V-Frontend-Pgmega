@@ -1,4 +1,10 @@
+import { useSelector } from "react-redux";
+import  Footer  from "./Footer";
+
+
 export default function TermsConditions() {
+  const { user } = useSelector((state) => state.auth); // get user from redux
+  const role = user?.role; // default role if no user
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-4xl mx-auto px-6 py-14">
@@ -50,8 +56,12 @@ export default function TermsConditions() {
             </p>
           </section>
         </div>
+        
 
       </div>
+      {
+          role!=="user"?<Footer/>:<></>
+        }
     </div>
   );
 }

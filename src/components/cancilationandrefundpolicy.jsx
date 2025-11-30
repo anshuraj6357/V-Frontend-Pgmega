@@ -1,8 +1,16 @@
+
+import { useSelector } from "react-redux";
+import Footer from "./Footer";
+
+
+
 export default function CancellationPolicy() {
+  const { user } = useSelector((state) => state.auth); // get user from redux
+  const role = user?.role; // default role if no user
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white py-16 px-5">
       <div className="max-w-4xl mx-auto">
-        
+
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-extrabold text-gray-900 drop-shadow-sm">
@@ -15,15 +23,15 @@ export default function CancellationPolicy() {
 
         {/* Card Wrapper */}
         <div className="space-y-8">
-          
+
           {/* Section */}
           <div className="bg-white/80 backdrop-blur-md p-8 rounded-3xl shadow-lg border border-gray-200">
             <h2 className="text-2xl font-semibold text-blue-700">
               1. Platform Role
             </h2>
             <p className="mt-3 text-gray-700 leading-relaxed">
-              ROOMGI is a booking platform connecting users to PGs, hostels, and hotels. 
-              We do not own or manage the listed properties; each one is operated 
+              ROOMGI is a booking platform connecting users to PGs, hostels, and hotels.
+              We do not own or manage the listed properties; each one is operated
               independently by its respective owner/host.
             </p>
           </div>
@@ -33,7 +41,7 @@ export default function CancellationPolicy() {
               2. Cancellation Policy
             </h2>
             <p className="mt-3 text-gray-700 leading-relaxed">
-              Cancellation terms vary by property. Please check the cancellation details 
+              Cancellation terms vary by property. Please check the cancellation details
               mentioned on the specific listing before confirming your booking.
             </p>
           </div>
@@ -43,8 +51,8 @@ export default function CancellationPolicy() {
               3. Refund Policy
             </h2>
             <p className="mt-3 text-gray-700 leading-relaxed">
-              Refunds are provided only when approved by the partner property.  
-              Eligible refunds are processed within **5–7 working days**, 
+              Refunds are provided only when approved by the partner property.
+              Eligible refunds are processed within **5–7 working days**,
               directly to your original payment method.
             </p>
           </div>
@@ -86,6 +94,9 @@ export default function CancellationPolicy() {
           © {new Date().getFullYear()} ROOMGI — All Rights Reserved.
         </p>
       </div>
+      {
+        role !== "user" ? <Footer /> : <></>
+      }
     </div>
   );
 }

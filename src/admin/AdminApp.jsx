@@ -1,15 +1,15 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-import DashboardLayout from './components/layout/DashboardLayout';
+import { Routes, Route, Navigate } from "react-router-dom";
+import DashboardLayout from "./components/layout/DashboardLayout";
 
-import Properties from './pages/Properties';
-import Tenants from './pages/Tenants';
-import Payments from './pages/Payments';
-import Complaints from './pages/Complaints';
+import Properties from "./pages/Properties";
+import Tenants from "./pages/Tenants";
+import Payments from "./pages/Payments";
+import Complaints from "./pages/Complaints";
 
 import AddStaff from "./pages/c-xyz/addstaff";
 import EditStaff from "./pages/c-xyz/editstaff";
 import AddPayment from "./pages/c-xyz/addpayment";
-import StaffUtilities from './pages/StaffUtilities';
+import StaffUtilities from "./pages/StaffUtilities";
 
 import Signup from "./pages/auth/signup";
 import Login from "./pages/auth/loginpage";
@@ -26,10 +26,8 @@ import EditRoomForm from "./pages/c-xyz/editpage";
 export default function AdminApp() {
   return (
     <Routes>
-
       {/* ADMIN DASHBOARD WRAPPED ROUTES */}
       <Route path="/" element={<DashboardLayout />}>
-
         <Route index element={<Navigate to="properties" replace />} />
 
         <Route path="properties" element={<Properties />} />
@@ -55,7 +53,6 @@ export default function AdminApp() {
       {/* ADMIN AUTH ROUTES */}
       <Route path="login" element={<Login />} />
       <Route path="signup" element={<Signup />} />
-
     </Routes>
   );
 }

@@ -1,4 +1,12 @@
+
+import { useSelector } from "react-redux";
+import  Footer  from "./Footer";
+
+
+
 export default function PrivacyPolicy() {
+    const { user } = useSelector((state) => state.auth); // get user from redux
+    const role = user?.role; // default role if no user
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-white py-16 px-6">
       <div className="max-w-4xl mx-auto bg-white p-10 rounded-3xl shadow-xl border">
@@ -54,6 +62,9 @@ export default function PrivacyPolicy() {
 
         </div>
       </div>
+       {
+                role!=="user"?<Footer/>:<></>
+              }
     </div>
   );
 }

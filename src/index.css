@@ -1,3 +1,61 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* CARD STYLES */
+.dashboard-card {
+  @apply bg-white rounded-2xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-all;
+}
+.card-label {
+  @apply text-gray-600 text-sm;
+}
+.card-value {
+  @apply text-3xl font-bold text-[#1e3a5f] tracking-tight;
+}
+.card-sub {
+  @apply text-sm text-gray-500 mt-1;
+}
+
+/* BUTTONS */
+.btn-primary {
+  @apply bg-[#1e3a5f] hover:bg-[#2a4a7b] text-white px-4 py-2 rounded-xl flex items-center gap-2 shadow-md transition-all;
+}
+.btn-orange {
+  @apply flex items-center gap-2 px-4 py-2 bg-[#ff6b35] text-white rounded-xl hover:bg-[#e55a2b] transition-all shadow-md;
+}
+
+/* SELECT INPUT */
+.input-select {
+  @apply border border-gray-300 rounded-xl px-3 py-2 text-gray-700 focus:ring-[#1e3a5f] focus:border-[#1e3a5f];
+}
+
+/* TABS */
+.tab-btn {
+  @apply flex-1 px-6 py-4 text-center text-gray-600 hover:bg-gray-50 font-medium transition-all;
+}
+.active-tab {
+  @apply text-[#1e3a5f] border-b-2 border-[#1e3a5f] bg-gray-50;
+}
+
+/* TABLE */
+.table-head th {
+  @apply text-left px-4 py-3 text-sm font-medium text-gray-600;
+}
+
+.table-row {
+  @apply hover:bg-gray-50 cursor-pointer transition-all;
+}
+
+/* STATUS BADGES */
+.status-badge {
+  @apply inline-flex px-3 py-1 rounded-full text-sm font-medium;
+}
+.status-badge.paid {
+  @apply bg-green-100 text-green-600;
+}
+.status-badge.dues {
+  @apply bg-yellow-100 text-yellow-600;
+}
+.status-badge.pending {
+  @apply bg-red-100 text-red-600;
+}

@@ -1,49 +1,166 @@
-import {Mail, MessageCircle } from 'lucide-react';
+// import {
+//   Facebook,
+//   Instagram,
+//   Youtube,
+//   Linkedin,
+//   Twitter,
+// } from "lucide-react";
 
+// export default function Footer() {
+//   return (
+//     <footer className="bg-gradient-to-b from-[#2c1a12] to-[#c62828] text-white pt-16 pb-10 px-6 md:px-20">
+
+//       {/* ======== GRID SECTION ======== */}
+//       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+
+//         {/* ABOUT */}
+//         <div>
+//           <h2 className="text-2xl font-bold mb-4">About</h2>
+//           <ul className="space-y-3 text-lg opacity-90">
+//             <li>About Us</li>
+//             <li>News</li>
+//             <li>Terms & Conditions</li>
+//             <li>Privacy Policy</li>
+//             <li>Report Problem</li>
+//           </ul>
+//         </div>
+
+//         {/* BUY PROPERTIES */}
+//         <div>
+//           <h2 className="text-2xl font-bold mb-4">Buy Properties</h2>
+//           <ul className="space-y-3 text-lg opacity-90">
+//             <li>Showrooms In Mumbai</li>
+//             <li>PG In Delhi</li>
+//             <li>Offices In Mumbai</li>
+//             <li>Offices In Delhi</li>
+//           </ul>
+//         </div>
+
+//         {/* RENT PROPERTIES */}
+//         <div>
+//           <h2 className="text-2xl font-bold mb-4">Rent Properties</h2>
+//           <ul className="space-y-3 text-lg opacity-90">
+//             <li>Plots In Delhi</li>
+//             <li>Flats In Mumbai</li>
+//             <li>Showrooms In Delhi</li>
+//             <li>Villa In Delhi</li>
+//           </ul>
+//         </div>
+
+//         {/* APP DOWNLOAD */}
+//         <div>
+//           <h2 className="text-2xl font-bold mb-4">Get Our App</h2>
+
+//           <div className="flex flex-col gap-4">
+//             <img
+//               src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
+//               className="h-14 cursor-pointer"
+//               alt="Google Play"
+//             />
+//             <img
+//               src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"
+//               className="h-14 cursor-pointer"
+//               alt="App Store"
+//             />
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* ======== SOCIAL ICONS ======== */}
+//       <div className="mt-14 text-center">
+//         <h2 className="text-2xl font-bold mb-5">Connect with us</h2>
+
+//         <div className="flex justify-center gap-6 text-white">
+//           <Facebook className="h-7 w-7 cursor-pointer hover:opacity-80" />
+//           <Instagram className="h-7 w-7 cursor-pointer hover:opacity-80" />
+//           <Youtube className="h-7 w-7 cursor-pointer hover:opacity-80" />
+//           <Linkedin className="h-7 w-7 cursor-pointer hover:opacity-80" />
+//           <Twitter className="h-7 w-7 cursor-pointer hover:opacity-80" />
+//         </div>
+//       </div>
+//     </footer>
+//   );
+// }
+
+
+import {
+  Facebook,
+  Instagram,
+  Youtube,
+  Linkedin,
+  Twitter,
+} from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-800 text-white mt-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div>
-            <h3 className="text-lg font-semibold mb-2">PG Finder</h3>
-            <p className="text-gray-400">
-              Find your perfect PG accommodation near you
-            </p>
-          </div>
+    <footer className="bg-gradient-to-b from-[#2c1a12] to-[#c62828] text-white pt-16 pb-10 px-4 sm:px-10 md:px-20">
 
-          <div>
-            <h3 className="text-lg font-semibold mb-2">Quick Links</h3>
-            <ul className="space-y-0 text-gray-400">
-              <li>About Us</li>
-              <li>Contact</li>
-              <li>Terms of Service</li>
-              <li>Privacy Policy</li>
-            </ul>
-          </div>
+      {/* ======== GRID SECTION ======== */}
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8">
 
-          <div>
-            <h3 className="text-lg font-semibold mb-2">Contact Us</h3>
-            <a
-              href="mailto:kumabhi139@gmail.com"
-              className="text-blue-400 flex items-center gap-1">
-              <Mail className="w-4 h-4 text-white" />
-               kumabhi139@gmail.com
-            </a>
-            <a
-              href="https://wa.me/919693272685"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-400 flex items-center">
-              <MessageCircle className="w-4 h-4 text-white" />
-              +91 9693272685
-              </a>
-          </div>
+        {/* ABOUT */}
+        <div>
+          <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4">About</h2>
+          <ul className="space-y-2 sm:space-y-3 text-sm sm:text-base md:text-lg opacity-90">
+            <li>About Us</li>
+            <li>News</li>
+            <li>Terms & Conditions</li>
+            <li>Privacy Policy</li>
+            <li>Report Problem</li>
+          </ul>
         </div>
 
-        <div className="border-t border-gray-700 mt-1 pt-1  text-center text-gray-400">
-          <p>&copy; 2025 PG Finder. All rights reserved.</p>
+        {/* BUY PROPERTIES */}
+        <div>
+          <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4">Buy Properties</h2>
+          <ul className="space-y-2 sm:space-y-3 text-sm sm:text-base md:text-lg opacity-90">
+            <li>Showrooms In Mumbai</li>
+            <li>PG In Delhi</li>
+            <li>Offices In Mumbai</li>
+            <li>Offices In Delhi</li>
+          </ul>
+        </div>
+
+        {/* RENT PROPERTIES */}
+        <div>
+          <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4">Rent Properties</h2>
+          <ul className="space-y-2 sm:space-y-3 text-sm sm:text-base md:text-lg opacity-90">
+            <li>Plots In Delhi</li>
+            <li>Flats In Mumbai</li>
+            <li>Showrooms In Delhi</li>
+            <li>Villa In Delhi</li>
+          </ul>
+        </div>
+
+        {/* APP DOWNLOAD */}
+        <div>
+          <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4">Get Our App</h2>
+
+          <div className="flex flex-col gap-3 sm:gap-4">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
+              className="h-12 sm:h-14 cursor-pointer"
+              alt="Google Play"
+            />
+            <img
+              src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"
+              className="h-12 sm:h-14 cursor-pointer"
+              alt="App Store"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* ======== SOCIAL ICONS ======== */}
+      <div className="mt-10 sm:mt-14 text-center">
+        <h2 className="text-lg sm:text-2xl font-bold mb-4 sm:mb-5">Connect with us</h2>
+
+        <div className="flex justify-center gap-5 sm:gap-6 text-white">
+          <Facebook className="h-6 w-6 sm:h-7 sm:w-7 cursor-pointer hover:opacity-80" />
+          <Instagram className="h-6 w-6 sm:h-7 sm:w-7 cursor-pointer hover:opacity-80" />
+          <Youtube className="h-6 w-6 sm:h-7 sm:w-7 cursor-pointer hover:opacity-80" />
+          <Linkedin className="h-6 w-6 sm:h-7 sm:w-7 cursor-pointer hover:opacity-80" />
+          <Twitter className="h-6 w-6 sm:h-7 sm:w-7 cursor-pointer hover:opacity-80" />
         </div>
       </div>
     </footer>

@@ -1,12 +1,10 @@
-import { Home, User, Menu, Loader2 } from "lucide-react";
+import { User, Menu } from "lucide-react";
 import { Link } from "react-router-dom";
-
-import logo from "../assets/logo.png";
+import logo from "../assets/logo4.jpg";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLogoutUserMutation } from "../Bothfeatures/features/api/authapi";
 import { userLoggedout, hydrateUser } from "../Bothfeatures/features/authSlice";
-import { toast } from "react-toastify";
 
 export default function Header({ onAuthClick, showHome = false }) {
   const [openDropdown, setOpenDropdown] = useState(false);
@@ -18,7 +16,7 @@ export default function Header({ onAuthClick, showHome = false }) {
   const dispatch = useDispatch();
   const { user, isAuthenticated } = useSelector((state) => state.auth);
 
-  const [logoutUser, { isLoading, iserror }] = useLogoutUserMutation();
+  const [logoutUser] = useLogoutUserMutation();
 
   // Hydrate user from localStorage
   useEffect(() => {
@@ -47,7 +45,7 @@ export default function Header({ onAuthClick, showHome = false }) {
       dispatch(userLoggedout());
       localStorage.removeItem("user");
       setOpenDropdown(false);
-      toast.success("Logged out successfully");
+      alert("Logged out successfully");
     } catch (err) {
       console.log("Logout error:", err);
     }
@@ -55,13 +53,13 @@ export default function Header({ onAuthClick, showHome = false }) {
 
   return (
     <header className="backdrop-blur-lg bg-white/80 shadow-md sticky top-0 z-50">
-      <div className="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center">
+      <div className="max-w-7xl mx-1 px-1 sm:px-1 lg:px-2 py-1 flex justify-between items-center">
         {/* Logo */}
         <Link to="/" className="flex items-center space-x-3 group">
           <img
             src={logo}
             alt="Logo"
-            className="h-20 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+            className="h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
           />
         </Link>
 
@@ -105,16 +103,8 @@ export default function Header({ onAuthClick, showHome = false }) {
                   <button
                     onClick={handleLogout}
                     className="w-full px-4 py-2 text-red-600 hover:bg-gray-100 text-left"
-                  >{
-                      isLoading ? (
-                        <>
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                        </>
-                      ) : (
-                        <>Logout</>
-                      )
-                    }
-
+                  >
+                    Logout
                   </button>
                 </div>
               )}
@@ -132,14 +122,24 @@ export default function Header({ onAuthClick, showHome = false }) {
         </div>
 
         {/* Mobile Menu Icon */}
-        <button className="md:hidden" onClick={toggleMobileMenu}>
-          <Menu className="w-7 h-7" />
+        <button className="md:hidden flex items-center space-x-2 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition" onClick={toggleMobileMenu}>
+          <User className="w-5 h-5" />
         </button>
       </div>
 
       {/* Mobile Dropdown */}
       {mobileMenu && (
         <div className="md:hidden px-6 pb-4 space-y-4 animate-slideDown">
+          <input
+            type="text"
+            placeholder="Search rooms, PGs..."
+            className="w-full px-4 py-2 bg-gray-100 rounded-xl"
+          />
+
+          <button className="block w-full text-left px-4 py-2 bg-gray-100 rounded-lg">
+            Select City
+          </button>
+
           {isAuthenticated ? (
             <>
               <button className="block w-full text-left px-4 py-2">Profile</button>

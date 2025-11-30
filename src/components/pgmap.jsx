@@ -11,8 +11,8 @@ export default function PGMap() {
 
   // 1️⃣ Load Google Maps API
   const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: "AIzaSyBI_1GjWzjhnK--jH94wVq3dmdOGm6sUos", // replace with your valid key
-    libraries: ["marker"], // ✅ required for AdvancedMarkerElement
+    googleMapsApiKey: "AIzaSyBI_1GjWzjhnK--jH94wVq3dmdOGm6sUos",
+    libraries: ["marker"], 
   });
 
   // 2️⃣ Fetch branch from backend

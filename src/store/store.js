@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer, { hydrateUser } from "../Bothfeatures/features/authSlice";
-
+import wishlistReducer, { hydrateWishlist } from "../Bothfeatures/features/wishlist";
 import { PgApi } from "../Bothfeatures/features/api/allpg";
 import authApi from "../Bothfeatures/features/api/authapi";
 
@@ -21,10 +21,11 @@ export const appStore = configureStore({
   reducer: {
     auth: authReducer,
     tenants: tenantReducer,
+    wishlist: wishlistReducer,
 
     [PgApi.reducerPath]: PgApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
-   
+
     [propertyApi.reducerPath]: propertyApi.reducer,
     [TenantApi.reducerPath]: TenantApi.reducer,
     [AnalysisApi.reducerPath]: AnalysisApi.reducer,
@@ -38,7 +39,7 @@ export const appStore = configureStore({
       PgApi.middleware,
       authApi.middleware,
       paymentApi.middleware,
-    
+
       propertyApi.middleware,
       TenantApi.middleware,
       AnalysisApi.middleware,
@@ -79,4 +80,3 @@ const initializeUser = () => {
 
 const initialState = initializeUser();
 appStore.dispatch(hydrateUser(initialState));
-

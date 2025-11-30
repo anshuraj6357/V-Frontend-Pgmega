@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const PgApi = createApi({
     reducerPath: "PgApi",
     baseQuery: fetchBaseQuery({
-        baseUrl: "https://admin-backend-pgmega.onrender.com/api/property/",
+        baseUrl: "http://localhost:5000/api/property/",
         credentials: "include",
     }),
     endpoints: (builder) => ({

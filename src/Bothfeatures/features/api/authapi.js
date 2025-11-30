@@ -3,7 +3,7 @@ import { userLoggedin, userLoggedout } from '../../features/authSlice';
 
 // const USER_API = import.meta.env.VITE_REACT_APP_AUTHAPI;
 
-const USER_API = "https://admin-backend-pgmega.onrender.com/api/v1/user/";
+const USER_API = "http://localhost:5000/api/v1/user/";
 
 const authApi = createApi({
   reducerPath: "authApi",
@@ -31,6 +31,17 @@ const authApi = createApi({
       query: () => ({
         url: `filtered`
       })
+    }),
+    toggleWishlist: builder.mutation({
+      query: (pgId) => ({
+        url: "/wishlist/toggle",
+        method: "POST",
+        body: { pgId },
+      }),
+    }),
+
+    getWishlist: builder.query({
+      query: () => "/wishlist/my",
     }),
     ForgotUserpassword: builder.mutation({
       query: ({ password, confermpassword, resettoken }) => ({
@@ -95,6 +106,8 @@ const authApi = createApi({
 
 export const {
   useGetAllFilteredQuery,
+  useToggleWishlistMutation,
+  useGetWishlistQuery,
   useForgotUserpasswordMutation,
   useProfileQuery,
   useForgotUserMutation,

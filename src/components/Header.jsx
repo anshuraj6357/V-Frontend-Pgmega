@@ -1,22 +1,22 @@
-import { User, Menu } from "lucide-react";
-import { Link } from "react-router-dom";
-import logo from "../assets/logo4.jpg";
+import { Home, User, Menu, Loader2, Plus } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import logo from "../assets/logo.png";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLogoutUserMutation } from "../Bothfeatures/features/api/authapi";
 import { userLoggedout, hydrateUser } from "../Bothfeatures/features/authSlice";
+import { toast } from "react-toastify";
 
-export default function Header({ onAuthClick, showHome = false }) {
+export default function Header() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { user, isAuthenticated } = useSelector((state) => state.auth);
+
   const [openDropdown, setOpenDropdown] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
 
-  const toggleMenu = () => setOpenDropdown(!openDropdown);
-  const toggleMobileMenu = () => setMobileMenu(!mobileMenu);
-
-  const dispatch = useDispatch();
-  const { user, isAuthenticated } = useSelector((state) => state.auth);
-
-  const [logoutUser] = useLogoutUserMutation();
+  const [logoutUser, { isLoading }] = useLogoutUserMutation();
 
   // Hydrate user from localStorage
   useEffect(() => {
@@ -24,126 +24,146 @@ export default function Header({ onAuthClick, showHome = false }) {
 
     try {
       const parsed = raw ? JSON.parse(raw) : null;
-
       if (parsed) {
         dispatch(hydrateUser({ user: parsed, isAuthenticated: true }));
       } else {
         dispatch(userLoggedout());
       }
-    } catch (e) {
-      console.error("Invalid stored user JSON:", raw);
+    } catch (err) {
       localStorage.removeItem("user");
       dispatch(userLoggedout());
     }
   }, [dispatch]);
 
-
-  // Logout handler
   const handleLogout = async () => {
     try {
       await logoutUser().unwrap();
       dispatch(userLoggedout());
       localStorage.removeItem("user");
       setOpenDropdown(false);
-      alert("Logged out successfully");
+      toast.success("Logged out successfully");
     } catch (err) {
-      console.log("Logout error:", err);
+      console.log(err);
     }
   };
 
   return (
-    <header className="backdrop-blur-lg bg-white/80 shadow-md sticky top-0 z-50">
-      <div className="max-w-7xl mx-1 px-1 sm:px-1 lg:px-2 py-1 flex justify-between items-center">
+    <header className="backdrop-blur-xl bg-white/70 shadow-sm sticky top-0 z-50 border-b">
+      <div className="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+        
         {/* Logo */}
-        <Link to="/" className="flex items-center space-x-3 group">
+        <Link to="/" className="flex items-center gap-3 group">
           <img
             src={logo}
             alt="Logo"
-            className="h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+            className="h-16 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
           />
         </Link>
 
+        {/* Add Property Button */}
+        <button
+          onClick={() => navigate("/login")}
+          className="hidden md:flex items-center gap-2 px-4 py-2 border border-blue-600 text-blue-600 font-medium rounded-lg hover:bg-blue-600 hover:text-white transition-all duration-200"
+        >
+          <Plus className="w-5 h-5" />
+          Add Your Property
+        </button>
+
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-6">
-          {showHome && (
-            <Link
-              to="/"
-              className="text-gray-700 hover:text-blue-600 font-medium transition-all"
-            >
-              Home
-            </Link>
-          )}
 
           {isAuthenticated ? (
-            <div className="relative flex items-center space-x-2">
-              {/* Avatar + Username Container */}
+            <div className="relative">
+              {/* User Avatar */}
               <div
-                onClick={toggleMenu}
-                className="flex items-center space-x-2 cursor-pointer select-none"
+                onClick={() => setOpenDropdown((prev) => !prev)}
+                className="flex items-center gap-2 cursor-pointer"
               >
-                {/* Avatar */}
-                <div className="w-10 h-10 flex items-center justify-center bg-blue-600 text-white rounded-full text-lg font-semibold shadow hover:shadow-lg transition">
+                <div className="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center font-semibold">
                   {user?.username?.charAt(0)?.toUpperCase()}
                 </div>
-                {/* Username */}
-                <span className="font-medium text-gray-700 hidden md:inline">
-                  {user?.username}
-                </span>
+
+                <span className="font-medium text-gray-700">{user?.username}</span>
               </div>
 
-              {/* Dropdown Menu */}
+              {/* Dropdown */}
               {openDropdown && (
-                <div className="absolute right-0 mt-12 w-44 bg-white shadow-lg rounded-lg border py-2 animate-fadeIn z-50">
-                  <button className="w-full px-4 py-2 hover:bg-gray-100 text-left">
+                <div className="absolute right-0 mt-3 w-48 bg-white rounded-lg shadow-lg border py-2 animate-fadeIn z-50">
+                  <button
+                    className="w-full px-4 py-2 text-left hover:bg-gray-100"
+                    onClick={() => navigate("/profile")}
+                  >
                     Profile
                   </button>
-                  <button className="w-full px-4 py-2 hover:bg-gray-100 text-left">
-                    My Bookings
+
+                  <button
+                    className="w-full px-4 py-2 text-left hover:bg-gray-100"
+                    onClick={() => navigate("/wishlist")}
+                  >
+                    My Wishlist
                   </button>
+
                   <button
                     onClick={handleLogout}
-                    className="w-full px-4 py-2 text-red-600 hover:bg-gray-100 text-left"
+                    className="w-full px-4 py-2 text-left text-red-600 hover:bg-gray-100"
                   >
-                    Logout
+                    {isLoading ? (
+                      <Loader2 className="w-5 h-5 animate-spin mx-auto" />
+                    ) : (
+                      "Logout"
+                    )}
                   </button>
                 </div>
               )}
             </div>
           ) : (
             <button
-              onClick={onAuthClick}
-              className="flex items-center space-x-2 bg-blue-600 text-white px-6 py-2 rounded-xl hover:bg-blue-700 transition shadow-sm"
+              onClick={() => navigate("/login")}
+              className="bg-blue-600 text-white px-6 py-2 rounded-full font-medium shadow hover:shadow-lg hover:bg-blue-700 transition-all flex items-center gap-2"
             >
               <User className="w-5 h-5" />
-              <span>Sign In / Sign Up</span>
+              Sign In / Sign Up
             </button>
           )}
-
         </div>
 
         {/* Mobile Menu Icon */}
-        <button className="md:hidden flex items-center space-x-2 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition" onClick={toggleMobileMenu}>
-          <User className="w-5 h-5" />
+        <button className="md:hidden" onClick={() => setMobileMenu((p) => !p)}>
+          <Menu className="w-7 h-7" />
         </button>
       </div>
 
-      {/* Mobile Dropdown */}
+      {/* Mobile Menu */}
       {mobileMenu && (
         <div className="md:hidden px-6 pb-4 space-y-4 animate-slideDown">
-          <input
-            type="text"
-            placeholder="Search rooms, PGs..."
-            className="w-full px-4 py-2 bg-gray-100 rounded-xl"
-          />
 
-          <button className="block w-full text-left px-4 py-2 bg-gray-100 rounded-lg">
-            Select City
+          {/* Add Property (mobile) */}
+          <button
+            onClick={() => {
+              setMobileMenu(false);
+              navigate("/add-property");
+            }}
+            className="flex items-center gap-2 w-full py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition"
+          >
+            <Plus className="w-5 h-5" /> Add Your Property
           </button>
 
           {isAuthenticated ? (
             <>
-              <button className="block w-full text-left px-4 py-2">Profile</button>
-              <button className="block w-full text-left px-4 py-2">My Bookings</button>
+              <button
+                onClick={() => navigate("/profile")}
+                className="block w-full text-left px-4 py-2"
+              >
+                Profile
+              </button>
+
+              <button
+                onClick={() => navigate("/wishlist")}
+                className="block w-full text-left px-4 py-2"
+              >
+                My Wishlist
+              </button>
+
               <button
                 onClick={handleLogout}
                 className="block w-full text-left px-4 py-2 text-red-600"
@@ -153,8 +173,8 @@ export default function Header({ onAuthClick, showHome = false }) {
             </>
           ) : (
             <button
-              onClick={onAuthClick}
-              className="w-full bg-blue-600 text-white py-2 rounded-xl"
+              onClick={() => navigate("/login")}
+              className="w-full py-2 rounded-lg bg-blue-600 text-white"
             >
               Sign In / Sign Up
             </button>

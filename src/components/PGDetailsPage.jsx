@@ -45,27 +45,27 @@ export default function PGDetailsPage() {
 
   // BOOKING
   const handleBook = () => {
-    if (isAuthenticated) {
-      setIsAuthModalOpen(true);
-    } else {
-      toast.info("Please Login to book PG");
-    }
+    if (!isAuthenticated) return setIsAuthModalOpen(true);
+    // Navigate to booking page or handle booking logic
+    navigate(`/book/${pg._id}`);
   };
 
   // MAP DIRECTIONS
   const handleGetDirections = () => {
-    const [lng, lat] = pg?.branch?.location?.coordinates || [];
+    if (!isAuthenticated) return setIsAuthModalOpen(true);
 
+    const [lng, lat] = pg?.branch?.location?.coordinates || [];
     if (!lat || !lng) return toast.error("PG location missing");
     if (!userLocation.lat) return toast.error("User location not available");
 
     const url = `https://www.google.com/maps/dir/?api=1&origin=${userLocation.lat},${userLocation.lng}&destination=${lat},${lng}&travelmode=driving`;
-
     window.open(url, "_blank");
   };
 
   // SHARE PG
   const sharePG = () => {
+    if (!isAuthenticated) return setIsAuthModalOpen(true);
+
     if (navigator.share) {
       navigator.share({
         title: "Check this PG",
@@ -77,7 +77,6 @@ export default function PGDetailsPage() {
     }
   };
 
-  // LOADING UI
   if (isLoading)
     return (
       <div className="flex flex-col items-center justify-center h-[60vh]">
@@ -95,14 +94,11 @@ export default function PGDetailsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header onAuthClick={() => setIsAuthModalOpen(true)} showHome />
-
+ 
       <div className="max-w-6xl mx-auto px-4 py-8">
         {/* IMAGE SLIDER */}
         <div className="relative h-80 rounded-lg overflow-hidden shadow-lg mb-8">
           <img src={allImages[imageIndex]} alt="PG" className="w-full h-full object-cover" />
-
-          {/* left btn */}
           <button
             onClick={() =>
               setImageIndex((prev) => (prev === 0 ? allImages.length - 1 : prev - 1))
@@ -111,8 +107,6 @@ export default function PGDetailsPage() {
           >
             ‹
           </button>
-
-          {/* right btn */}
           <button
             onClick={() => setImageIndex((prev) => (prev + 1) % allImages.length)}
             className="absolute right-4 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow hover:bg-gray-100"
@@ -127,7 +121,6 @@ export default function PGDetailsPage() {
             {/* BASIC INFO */}
             <div className="bg-white p-6 rounded-xl shadow">
               <h1 className="text-3xl font-bold text-gray-900">{pg.branch.name}</h1>
-
               <div className="flex items-center space-x-4 mt-2">
                 <div className="flex items-center">
                   <Star className="w-5 h-5 text-yellow-500" />
@@ -138,14 +131,12 @@ export default function PGDetailsPage() {
                   <span className="text-sm">Verified</span>
                 </div>
               </div>
-
               <p className="text-gray-600 mt-4">{pg.branch.address}</p>
             </div>
 
             {/* FACILITIES */}
             <div className="bg-white p-6 rounded-xl shadow">
               <h2 className="text-xl font-bold mb-4">Facilities</h2>
-
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {pg.facilities?.map((item, i) => (
                   <div key={i} className="flex items-center gap-2 bg-gray-100 p-2 rounded-md">
@@ -160,7 +151,6 @@ export default function PGDetailsPage() {
           {/* RIGHT */}
           <div className="bg-white p-6 rounded-xl shadow sticky top-24 space-y-4">
             <h2 className="text-2xl font-bold text-gray-900">Rent Breakdown</h2>
-
             {pg.category === "Pg" ? (
               <Price label="Rent per Month" value={pg.price} />
             ) : (
@@ -172,53 +162,47 @@ export default function PGDetailsPage() {
             )}
 
             {/* BOOK BUTTON */}
-            <button
-              onClick={handleBook}
-              disabled={!isAuthenticated}
-              className={`w-full py-3 rounded-lg mt-4 text-lg font-medium transition 
-    ${isAuthenticated
-                  ? "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
-                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                }
-  `}
-            >
-              {isAuthenticated ? "Book Now" : "Login to Book"}
-            </button>
+           
 
 
             {/* ACTION BUTTONS */}
             <div className="flex flex-col mt-4 space-y-3">
+               <Action
+              icon={<Phone />}
+              label={isAuthenticated ? "Contact Owner" : "Login to Contact Owner"}
+              whatsappNumber="+919693915693"
+              isAuthenticated={isAuthenticated}
+              onAuthOpen={() => setIsAuthModalOpen(true)}
+            />
+
               <Action
-                icon={<Phone />}
-                label="WhatsApp Owner"
-                disabled={!isAuthenticated}
-                whatsappNumber={pg.branch.phone}
-              />
-
-              {/* {!isAuthenticated && (
-                <p className="text-sm text-red-500 text-center">
-                  Login to contact owner
-                </p>
-              )} */}
-
-              <Action icon={<Navigation />}
+                icon={<Navigation />}
                 label="Get Directions"
                 onClick={handleGetDirections}
-                disabled={!isAuthenticated}
+                isAuthenticated={isAuthenticated}
+                onAuthOpen={() => setIsAuthModalOpen(true)}
               />
-              <Action icon={<Share2 />}
+              <Action
+                icon={<Share2 />}
                 label="Share PG"
                 onClick={sharePG}
-                disabled={!isAuthenticated}
+                isAuthenticated={isAuthenticated}
+                onAuthOpen={() => setIsAuthModalOpen(true)}
               />
             </div>
           </div>
         </div>
       </div>
 
-      <Footer />
-      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
-    </div>
+     
+
+      {/* AUTH MODAL */}
+      {
+        isAuthModalOpen && (
+          <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+        )
+      }
+    </div >
   );
 }
 
@@ -233,9 +217,9 @@ function Price({ label, value }) {
 }
 
 // ACTION BUTTON
-function Action({ icon, label, onClick, whatsappNumber, disabled }) {
+function Action({ icon, label, onClick, whatsappNumber, isAuthenticated, onAuthOpen }) {
   const handleClick = () => {
-    if (disabled) return toast.error("Please login first");
+    if (!isAuthenticated) return onAuthOpen();
 
     if (whatsappNumber) {
       const msg = encodeURIComponent("Hello, I'm interested in your PG");
@@ -249,8 +233,7 @@ function Action({ icon, label, onClick, whatsappNumber, disabled }) {
   return (
     <button
       onClick={handleClick}
-      className={`flex items-center gap-3 p-3 border rounded-lg shadow-sm transition ${disabled ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-100"
-        }`}
+      className="flex items-center gap-3 p-3 border rounded-lg shadow-sm transition hover:bg-gray-100"
     >
       {icon}
       <span className="font-medium">{label}</span>

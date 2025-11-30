@@ -1,5 +1,5 @@
-import { Routes, Route } from 'react-router-dom';
-import { useDispatch } from "react-redux";
+import { Routes, Route, useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 
 import LandingPage from './components/LandingPage';
@@ -21,6 +21,8 @@ import { hydrateUser } from "./Bothfeatures/features/authSlice";
 function App() {
   const dispatch = useDispatch();
 
+  const { user } = useSelector(state => state.auth); // get logged-in user from redux
+
   // Hydrate user from localStorage
   useEffect(() => {
     const raw = localStorage.getItem("user");
@@ -35,10 +37,14 @@ function App() {
       dispatch(hydrateUser({ user: null, isAuthenticated: false }));
     }
   }, [dispatch]);
+   const hideHeaderFooter = user?.role === "owner" || user?.role === "branch-manager";
+   console.log(hideHeaderFooter)
+
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
+      {hideHeaderFooter?<></>:<Header />}
+
 
       <main className="flex-1">
         <Routes>
@@ -60,8 +66,10 @@ function App() {
           <Route path="/login" element={<AuthModal />} />
         </Routes>
       </main>
+      {
+        <Footer />
+      }
 
-      <Footer />
     </div>
   );
 }

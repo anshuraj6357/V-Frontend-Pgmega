@@ -12,23 +12,17 @@ export default function ShippingPolicy() {
 
         {/* Content */}
         <p className="text-gray-700 text-lg sm:text-xl mb-4 leading-relaxed">
-          ROOMGI does not provide any physical products.
+          ROOMGI is a service-based platform that provides online PG, hostel, and hotel booking services.
         </p>
         <p className="text-gray-700 text-lg sm:text-xl mb-4 leading-relaxed">
-          All services offered (PG, hostel, hotel booking) are digital services.
+          We do not ship any physical products.
+        </p>
+        <p className="text-gray-700 text-lg sm:text-xl mb-4 leading-relaxed">
+          All bookings, confirmations, and receipts are delivered digitally via email, SMS, or WhatsApp.
         </p>
         <p className="text-gray-700 text-lg sm:text-xl font-semibold">
-          Hence, shipping is <span className="text-blue-600">not applicable</span>.
+          Therefore, shipping charges and delivery timelines are <span className="text-blue-600">not applicable</span> to our services.
         </p>
-
-        {/* Optional Illustration */}
-        <div className="mt-8">
-          <img
-            src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/000000/external-delivery-shopping-flaticons-lineal-color-flat-icons.png"
-            alt="No Shipping"
-            className="mx-auto w-24 h-24"
-          />
-        </div>
       </div>
     </div>
   );

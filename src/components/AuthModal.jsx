@@ -11,7 +11,7 @@ import { userLoggedin } from "../Bothfeatures/features/authSlice";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function AuthModal({ isOpen, onClose }) {
-  const [isSignUp, setIsSignUp] = useState(true);
+  const [isSignUp, setIsSignUp] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -44,28 +44,40 @@ export default function AuthModal({ isOpen, onClose }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      let res; // declare res here
+
       if (isSignUp) {
         if (!formData.username || !formData.email || !formData.password || !formData.phone || !formData.role) {
           toast.error("Please fill all fields");
           return;
         }
-        await registerUser(formData).unwrap();
-        toast.success("Registered successfully! Please login.");
-        setIsSignUp(false);
+
+        // Store the API response
+        res = await registerUser(formData).unwrap();
+        toast.success("Registered successfully! Logging you in...");
+
       } else {
-        if (!formData.email || !formData.password || !formData.role) {
+        if (!formData.email || !formData.password) {
           toast.error("Please fill all fields");
           return;
         }
-        const res = await loginUser(formData).unwrap();
-        toast.success(res.message || "Logged in successfully!");
-        dispatch(userLoggedin({ user: res.existingUser }));
-        localStorage.setItem("user", JSON.stringify(res.existingUser));
 
-        if (res?.existingUser?.role !== "user") navigate("/admin/properties");
-        else navigate("/");
+        // Store the API response
+        res = await loginUser(formData).unwrap();
+        toast.success(res.message || "Logged in successfully!");
       }
+
+      // Dispatch user and save to localStorage
+      dispatch(userLoggedin({ user: res.existingUser }));
+      localStorage.setItem("user", JSON.stringify(res.existingUser));
+
+      // Navigate based on role
+      if (res?.existingUser?.role !== "user") navigate("/admin/properties");
+      else navigate("/");
+
+      // Reset form
       setFormData({ username: "", email: "", password: "", phone: "", role: "" });
+
     } catch (err) {
       toast.error(err?.data?.message || "Something went wrong!");
     }
@@ -78,7 +90,7 @@ export default function AuthModal({ isOpen, onClose }) {
         {/* Close Button */}
         <button
           onClick={() => {
-             // properly call the function
+            // properly call the function
             navigate("/"); // navigate after closing
           }}
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition"
@@ -171,30 +183,37 @@ export default function AuthModal({ isOpen, onClose }) {
 
         {/* Toggle SignUp/Login */}
         <div className="mt-5 text-center text-sm flex flex-col gap-2">
-          {isSignUp ? (
-            <span>
-              Already have an account?{" "}
-              <button onClick={() => setIsSignUp(false)} className="text-indigo-600 hover:text-indigo-700 font-medium">
-                Login
-              </button>
-            </span>
-          ) : (
-            <>
-              <span>
-                Don't have an account?{" "}
-                <button onClick={() => setIsSignUp(true)} className="text-indigo-600 hover:text-indigo-700 font-medium">
-                  Sign Up
-                </button>
-              </span>
-              <button
-                onClick={() => toast.info("Forgot password clicked")}
-                className="text-red-500 hover:underline mt-1"
-              >
-                Forgot Password?
-              </button>
-            </>
-          )}
-        </div>
+  {isSignUp ? (
+    <span>
+      Already have an account?{" "}
+      <button
+        onClick={() => setIsSignUp(false)}
+        className="text-indigo-600 hover:text-indigo-700 font-medium"
+      >
+        Login
+      </button>
+    </span>
+  ) : (
+    <>
+      <span>
+        Don't have an account?{" "}
+        <button
+          onClick={() => setIsSignUp(true)}
+          className="text-indigo-600 hover:text-indigo-700 font-medium"
+        >
+          Sign Up
+        </button>
+      </span>
+      <button
+        onClick={() => toast.info("Forgot password clicked")}
+        className="text-red-500 hover:underline mt-1"
+      >
+        Forgot Password?
+      </button>
+    </>
+  )}
+</div>
+
       </div>
     </div>
   );

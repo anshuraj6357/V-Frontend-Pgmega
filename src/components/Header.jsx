@@ -141,7 +141,7 @@ export default function Header() {
           <button
             onClick={() => {
               setMobileMenu(false);
-              navigate("/add-property");
+              navigate("/login");
             }}
             className="flex items-center gap-2 w-full py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition"
           >

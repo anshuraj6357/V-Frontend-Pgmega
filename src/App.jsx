@@ -16,6 +16,7 @@ import HelpCenter from "./components/HelpCenter.jsx";
 import FAQs from "./components/FAQs.jsx";
 import CustomerSupport from "./components/CustomerSupport.jsx";
 import PartnerWithRoomgi from "./components/PartnerWithRoomgi.jsx";
+import AboutUs from "./components/AbutUs.jsx";
 
 import DashboardHeader from "./admin/header";
 import AdminApp from "./admin/AdminApp";
@@ -86,6 +87,7 @@ function App() {
             <Route path="/faqs" element={<FAQs />} />
             <Route path="/customersupport" element={<CustomerSupport />} />
             <Route path="/partnerwithroomgi" element={<PartnerWithRoomgi />} />
+             <Route path="/aboutus" element={<AboutUs />} />
           
               
 

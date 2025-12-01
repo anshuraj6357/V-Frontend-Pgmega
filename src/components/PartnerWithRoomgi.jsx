@@ -1,5 +1,7 @@
 import { Building2, TrendingUp, ShieldCheck, Users, ArrowRight, CheckCircle } from "lucide-react";
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import Footer from "./Footer";
 
 export default function PartnerWithRoomgi() {
   const [form, setForm] = useState({
@@ -22,25 +24,38 @@ export default function PartnerWithRoomgi() {
     setTimeout(() => setSent(false), 3000);
   };
 
+  // FIXED - useSelector + role
+  const { user, isAuthenticated } = useSelector((state) => state.auth);
+  const role = user?.role;
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white py-16 px-6">
-      <div className="max-w-6xl mx-auto bg-white p-10 rounded-3xl shadow-xl border">
-        {/* Hero */}
-        <h1 className="text-4xl font-extrabold text-gray-900 text-center mb-4">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-green-50 to-white">
+
+
+
+     <div className="flex-grow pt-28 pb-16 px-6">
+      <div className="max-w-8xl mx-auto bg-white p-10 rounded-3xl shadow-xl border mb-16 ">
+         <h1 className="text-4xl font-extrabold text-gray-900 text-center mb-4">
           Partner with <span className="text-green-600">ROOMGI</span>
         </h1>
+    
+        
         <p className="text-center text-gray-600 max-w-3xl mx-auto mb-12">
           Join ROOMGI and grow your PG, Hostel, or Hotel business with increased visibility,
           higher occupancy, smart tools, and seamless property management.
         </p>
+      </div>
+        
+        {/* Hero */}
+       
 
         {/* Benefits */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-16">
           <div className="p-6 bg-gray-50 rounded-2xl shadow border text-center hover:shadow-md transition">
             <TrendingUp className="text-green-600 mx-auto" size={46} />
             <h3 className="text-xl font-semibold mt-4">Increase Occupancy</h3>
             <p className="text-gray-600 text-sm mt-2">
-              Get more bookings through ROOMGI’s high‑traffic accommodation marketplace.
+              Get more bookings through ROOMGI’s high-traffic accommodation marketplace.
             </p>
           </div>
 
@@ -76,6 +91,7 @@ export default function PartnerWithRoomgi() {
         {/* Registration Form */}
         <div className="bg-white rounded-2xl border shadow p-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">Start Your Partnership</h2>
+
           <form onSubmit={submitForm} className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <input type="text" name="name" placeholder="Your Name" value={form.name} onChange={updateField} required className="p-3 border rounded-xl" />
             <input type="email" name="email" placeholder="Email Address" value={form.email} onChange={updateField} required className="p-3 border rounded-xl" />
@@ -98,6 +114,8 @@ export default function PartnerWithRoomgi() {
           )}
         </div>
       </div>
+
+      {(isAuthenticated && role !== "user") ? <Footer /> : <></>}
     </div>
   );
 }

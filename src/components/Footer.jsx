@@ -22,9 +22,22 @@ export default function Footer() {
             Company
           </h2>
           <ul className="space-y-2 text-sm opacity-90">
-            <li className="cursor-pointer hover:opacity-100 duration-200">
+            <li
+              onClick={() => navigate("/aboutus")}
+              className="cursor-pointer hover:opacity-100 duration-200"
+            >
               About Us
             </li>
+
+
+
+
+
+
+
+
+
+
             <li
               onClick={() => navigate("/shippingpolicy")}
               className="cursor-pointer hover:opacity-100 duration-200"

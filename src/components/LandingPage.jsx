@@ -93,23 +93,22 @@ export default function LandingPage() {
           <h2 className="text-4xl md:text-5xl font-bold mb-2">Find Your Perfect PG Near You</h2>
           <p className="text-xl mb-6">Safe, Comfortable & Affordable Accommodation</p>
 
-         <div
-  className="w-full max-w-3xl bg-white/90 backdrop-blur-md shadow-xl rounded-full p-3 border border-white/30
-             absolute left-1/2 -translate-x-1/2 -bottom-10"
+          <div
+  className="w-full max-w-2xl bg-white/90 backdrop-blur-md shadow-xl rounded-full p-2 border border-white/30
+             absolute left-1/2 -translate-x-1/2 -bottom-8"
 >
-  <div className="relative flex gap-3 w-full">
+  <div className="relative flex gap-2 w-full">
     <input
       type="text"
       placeholder="Search your PG by name..."
       value={searchQuery}
       onChange={(e) => setSearchQuery(e.target.value)}
       onKeyPress={(e) => e.key === 'Enter' && handleFindPG()}
-      className="flex-1 px-5 py-4 rounded-full text-gray-900 bg-transparent focus:outline-none text-lg placeholder:text-lg"
+      className="flex-1 px-4 py-3 rounded-full text-gray-900 text-base bg-transparent focus:outline-none mt-0"
     />
-
     <button
       onClick={handleFindPG}
-      className="bg-blue-600 text-white px-8 py-4 rounded-full hover:bg-blue-700 transition font-medium text-lg"
+      className="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition font-medium text-base pb-1"
     >
       Find
     </button>
@@ -121,7 +120,12 @@ export default function LandingPage() {
 </div>
 
 
-          
+          <button
+            onClick={() => setShowFilters(!showFilters)}
+            className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-full text-lg shadow-md hover:bg-blue-700"
+          >
+            Filters
+          </button>
         </div>
       </div>
 
@@ -135,7 +139,7 @@ export default function LandingPage() {
               pgData.map(pg => (
                 <div
                   key={pg._id}
-                  onCl ick={() => navigate(`/pg/${pg._id}`)}
+                  onClick={() => navigate(`/pg/${pg._id}`)}
                   className="cursor-pointer bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition"
                 >
                   <div className="relative">

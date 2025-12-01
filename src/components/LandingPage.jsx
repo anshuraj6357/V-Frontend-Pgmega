@@ -120,12 +120,7 @@ export default function LandingPage() {
 </div>
 
 
-          <button
-            onClick={() => setShowFilters(!showFilters)}
-            className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-full text-lg shadow-md hover:bg-blue-700"
-          >
-            Filters
-          </button>
+         
         </div>
       </div>
 

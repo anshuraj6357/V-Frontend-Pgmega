@@ -125,53 +125,80 @@ export default function LandingPage() {
       </div>
 
       {/* PG LIST */}
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {pgData.length > 0 ? (
-              pgData.map(pg => (
-                <div
-                  key={pg._id}
-                  onClick={() => navigate(`/pg/${pg._id}`)}
-                  className="cursor-pointer bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition"
-                >
-                  <div className="relative">
-                    <img src={pg?.roomImages?.[0]} alt={pg.name} className="h-40 w-full object-cover" />
-                    <WishlistButton pg={pg} onAuthOpen={() => setIsAuthModalOpen(true)} />
-                  </div>
+{isLoading ? (
+  <Loader />
+) : (
+  <div className="max-w-7xl mx-auto px-4 py-10">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+      {pgData.length > 0 ? (
+        pgData.map(pg => (
+          <div
+            key={pg._id}
+            onClick={() => navigate(`/pg/${pg._id}`)}
+            className="cursor-pointer bg-white rounded-2xl shadow-md hover:shadow-xl transition-all overflow-hidden border border-gray-100 hover:-translate-y-1 duration-200"
+          >
+            {/* IMAGE + WISHLIST */}
+            <div className="relative">
+              <img
+                src={pg?.roomImages?.[0]}
+                alt={pg?.name}
+                className="h-44 w-full object-cover rounded-t-2xl"
+              />
 
-                  <div className="p-3">
-                    <div className="flex justify-between items-center">
-                      <p className="mt-0 font-semibold">{pg?.branch?.name}</p>
-                      <p className="text-sm bg-green-500 text-white px-2 py-0.5 rounded-lg">{pg?.category}</p>
-                    </div>
+              {/* Prevent click bubbling */}
+              <div onClick={(e) => e.stopPropagation()} className="absolute top-3 right-3">
+                <WishlistButton
+                  pg={pg}
+                  onAuthOpen={() => setIsAuthModalOpen(true)}
+                />
+              </div>
 
-                    <p className="mt-0 text-gray-500 font-small">📍 {pg?.branch?.address}</p>
+              {/* CATEGORY TAG */}
+              <span className="absolute bottom-3 left-3 bg-blue-600 text-white text-xs font-medium px-3 py-1 rounded-full shadow">
+                {pg?.category}
+              </span>
+            </div>
 
-                    {pg?.category == "Pg" ? (
-                      <p className="mt-0 font-semibold text-blue-700">₹{pg?.price}/Rent Per Month</p>
-                    ) : (
-                      <p className="mt-0 font-semibold text-blue-700">₹{pg?.rentperNight}/rentperNight</p>
-                    )}
+            {/* CONTENT */}
+            <div className="p-4">
+              <h3 className="text-lg font-semibold text-gray-900 leading-tight">
+                {pg?.branch?.name}
+              </h3>
 
-                    <div className="flex flex-wrap gap-2 mt-0">
-                      {pg?.facilities?.slice(0, 4).map((item, idx) => (
-                        <span key={idx} className="px-2 py-0.5 bg-blue-100 text-blue-800 rounded-full text-sm">
-                          {item}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="col-span-full text-center py-12 text-gray-500 text-lg">No PGs available</div>
-            )}
+              <p className="text-gray-500 text-sm mt-1 leading-snug flex items-center gap-1">
+                📍 {pg?.branch?.address}
+              </p>
+
+              {/* PRICE */}
+              <p className="text-blue-700 font-bold mt-2 text-base">
+                {pg?.category === "Pg"
+                  ? `₹${pg?.price}/month`
+                  : `₹${pg?.rentperNight}/night`}
+              </p>
+
+              {/* FACILITIES */}
+              <div className="flex flex-wrap gap-2 mt-3">
+                {pg?.facilities?.slice(0, 4).map((item, idx) => (
+                  <span
+                    key={idx}
+                    className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-medium"
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
+        ))
+      ) : (
+        <div className="col-span-full text-center py-12 text-gray-500 text-lg">
+          No PGs available
         </div>
       )}
+    </div>
+  </div>
+)}
+
 
       {/* POPULAR CITIES */}
       <section className="w-full py-14 bg-gray-100 text-center">

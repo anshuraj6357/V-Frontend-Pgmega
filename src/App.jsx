@@ -17,6 +17,8 @@ import FAQs from "./components/FAQs.jsx";
 import CustomerSupport from "./components/CustomerSupport.jsx";
 import PartnerWithRoomgi from "./components/PartnerWithRoomgi.jsx";
 import AboutUs from "./components/AbutUs.jsx";
+import About from "./components/About.jsx";
+import Contact from "./components/Contact.jsx";
 
 import DashboardHeader from "./admin/header";
 import AdminApp from "./admin/AdminApp";
@@ -69,35 +71,40 @@ function App() {
       )}
 
       {/* Main content */}
-      <main className="flex-1">
-        <Routes>
-          <Route element={<ProtectedRoute />}>
-            {/* Public Routes */}
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/pg/:id" element={<PGDetailsPage />} />
-            <Route path="/PGMap/:branchId" element={<PGMap />} />
-            <Route path="/Wishlist" element={<Wishlist />} />
-            </Route>
-            <Route path="/CancellationPolicy" element={<CancellationPolicy />} />
-            <Route path="/contactus" element={<ContactUs />} />
-            <Route path="/privacypolicy" element={<PrivacyPolicy />} />
-            <Route path="/termsandcondition" element={<TermsConditions />} />
-            <Route path="/shippingpolicy" element={<ShippingPolicy />} />
-            <Route path="/helpcenter" element={<HelpCenter />} />
-            <Route path="/faqs" element={<FAQs />} />
-            <Route path="/customersupport" element={<CustomerSupport />} />
-            <Route path="/partnerwithroomgi" element={<PartnerWithRoomgi />} />
-             <Route path="/aboutus" element={<AboutUs />} />
-          
-              
+     <main className="flex-1">
+  <Routes>
 
-          {/* Admin Routes */}
-          <Route path="/admin/*" element={<AdminApp />} />
+    {/* Protected Routes */}
+    <Route element={<ProtectedRoute />}>
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/pg/:id" element={<PGDetailsPage />} />
+      <Route path="/PGMap/:branchId" element={<PGMap />} />
+      <Route path="/Wishlist" element={<Wishlist />} />
+    </Route>
 
-          {/* Auth */}
-          <Route path="/login" element={<AuthModal />} />
-        </Routes>
-      </main>
+    {/* Public Routes */}
+    <Route path="/CancellationPolicy" element={<CancellationPolicy />} />
+    <Route path="/contactus" element={<ContactUs />} />
+    <Route path="/privacypolicy" element={<PrivacyPolicy />} />
+    <Route path="/termsandcondition" element={<TermsConditions />} />
+    <Route path="/shippingpolicy" element={<ShippingPolicy />} />
+    <Route path="/helpcenter" element={<HelpCenter />} />
+    <Route path="/faqs" element={<FAQs />} />
+    <Route path="/customersupport" element={<CustomerSupport />} />
+    <Route path="/partnerwithroomgi" element={<PartnerWithRoomgi />} />
+    <Route path="/aboutus" element={<AboutUs />} />
+    <Route path="/about" element={<About />} />
+    <Route path="/contact" element={<Contact />} />
+
+    {/* Admin */}
+    <Route path="/admin/*" element={<AdminApp />} />
+
+    {/* Auth */}
+    <Route path="/login" element={<AuthModal />} />
+
+  </Routes>
+</main>
+
 
       {/* Conditional Footer */}
       {!isAdminRoute && <Footer />}

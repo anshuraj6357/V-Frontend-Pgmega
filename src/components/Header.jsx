@@ -7,6 +7,7 @@ import { useLogoutUserMutation } from "../Bothfeatures/features/api/authapi";
 import { userLoggedout, hydrateUser } from "../Bothfeatures/features/authSlice";
 import { toast } from "react-toastify";
 
+
 export default function Header() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -56,7 +57,7 @@ export default function Header() {
           <img
             src={logo}
             alt="Logo"
-            className="h-16 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+            className="h-16 w-auto object-contain transition-transform duration-300 group-hover:scale-106"
           />
         </Link>
 

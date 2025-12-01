@@ -207,7 +207,7 @@ export default function LandingPage() {
 
       {/* POPULAR CITIES */}
       <section className="w-full py-14 bg-gray-100 text-center">
-        <h2 className="text-3xl md:text-4xl font-bold mb-3">PGs Available in Popular Cities</h2>
+        <h2 className="text-3xl md:text-4xl font-bold mb-3">Rooms Available in Popular Cities</h2>
         <p className="text-gray-600 mb-10">Choose your city and discover the best rooms near you.</p>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 w-11/12 mx-auto max-w-6xl">

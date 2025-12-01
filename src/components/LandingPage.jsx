@@ -136,7 +136,7 @@ export default function LandingPage() {
                   <p className="mt-0 text-gray-500 font-small">📍 {pg?.branch?.address}</p>
 
                   {
-                    (pg?.category == "Pg") ? <><p className="mt-0 font-semibold text-blue-700">₹{pg?.price}/RentPerMonth</p></> : <><p className="mt-0 font-semibold text-blue-700">₹{pg?.rentperNight}/rentperNight</p></>
+                    (pg?.category == "Pg") ? <><p className="mt-0 font-semibold text-blue-700">₹{pg?.price}/Rent Per Month</p></> : <><p className="mt-0 font-semibold text-blue-700">₹{pg?.rentperNight}/rentperNight</p></>
                   }
 
                   <div className="flex flex-wrap gap-2 mt-0">
@@ -297,4 +297,4 @@ export default function LandingPage() {
 
     </div>
   );
-}
+}  

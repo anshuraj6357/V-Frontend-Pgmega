@@ -41,27 +41,33 @@ export default function DashboardLayout() {
       <div className="flex flex-1 pt-16">
         {/* SIDEBAR */}
         <aside
-          className={`hidden lg:flex flex-col fixed top-16 bottom-0 bg-white border-r shadow-sm transition-all duration-300 ${
-            isSidebarOpen ? "w-64" : "w-20"
-          }`}
-        >
-          <nav className="p-4 space-y-2 flex-1">
-            {menuItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => handleNavigation(item.path)}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition ${
-                  isActive(item.path)
-                    ? "bg-blue-600 text-white shadow-md"
-                    : "text-gray-700 hover:bg-gray-100"
-                }`}
-              >
-                {menuIcons[item.id]}
-                {isSidebarOpen && <span>{item.label}</span>}
-              </button>
-            ))}
-          </nav>
-        </aside>
+  className={`
+    ${isMobileMenuOpen ? "flex" : "hidden"}     // Mobile toggle
+    lg:flex                                      // Always visible on laptop
+    flex-col fixed top-16 bottom-0 z-50
+    bg-white border-r shadow-sm 
+    transition-all duration-300
+    ${isSidebarOpen ? "w-64" : "w-20"}
+  `}
+>
+  <nav className="p-4 space-y-2 flex-1">
+    {menuItems.map((item) => (
+      <button
+        key={item.id}
+        onClick={() => handleNavigation(item.path)}
+        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition ${
+          isActive(item.path)
+            ? "bg-blue-600 text-white shadow-md"
+            : "text-gray-700 hover:bg-gray-100"
+        }`}
+      >
+        {menuIcons[item.id]}
+        {isSidebarOpen && <span>{item.label}</span>}
+      </button>
+    ))}
+  </nav>
+</aside>
+
 
         {/* CONTENT + FOOTER */}
         <main

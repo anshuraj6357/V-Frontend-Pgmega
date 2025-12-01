@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useGetAllRoomQuery, useDeleteRoomMutation } from "../../../Bothfeatures/features2/api/propertyapi";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
+import { CheckCircle, XCircle, AlertCircle } from "lucide-react";
 
 function ShowRooms() {
   const navigate = useNavigate();
@@ -21,7 +22,8 @@ function ShowRooms() {
 
   // Navigate to edit page
   const EditRoom = (roomId) => {
-    navigate(`/edit-room/${roomId}`);
+    console.log(roomId)
+    navigate(`/admin/edit-room/${roomId}`);
   };
 
   useEffect(() => {
@@ -51,7 +53,7 @@ function ShowRooms() {
       <Toaster position="top-right" />
 
       <div className="p-6 max-w-7xl mx-auto">
-        <h1 className="text-3xl font-extrabold mb-6 text-gray-800 tracking-wide text-center">
+        <h1 className="text-3xl font-extrabold mb-8 text-gray-800 tracking-wide text-center">
           All Rooms
         </h1>
 
@@ -62,18 +64,18 @@ function ShowRooms() {
             {data.rooms.map((room, index) => (
               <div
                 key={index}
-                className="group rounded-2xl bg-white/80 backdrop-blur-lg shadow-md hover:shadow-2xl 
-                           border border-gray-200 transition-all duration-300 hover:-translate-y-2 overflow-hidden"
+                className="group rounded-2xl bg-white shadow-xl hover:shadow-2xl border border-gray-200 
+                           transition-all duration-300 hover:-translate-y-2 overflow-hidden"
               >
-                {/* Image Carousel */}
-                <div className="relative w-full h-44 overflow-hidden bg-gray-100">
+                {/* Room Images */}
+                <div className="relative w-full h-48 bg-gray-100">
                   <div className="flex overflow-x-auto space-x-3 p-3 snap-x">
                     {room.roomImages?.map((img, idx) => (
                       <img
                         key={idx}
                         src={img}
                         alt="Room"
-                        className="snap-center rounded-xl w-48 h-40 object-cover shadow-md"
+                        className="snap-center rounded-xl w-52 h-40 object-cover shadow-md"
                       />
                     ))}
                   </div>
@@ -92,36 +94,41 @@ function ShowRooms() {
 
                 {/* Room Details */}
                 <div className="p-5">
-                  <h2 className="text-xl font-bold text-gray-900 flex items-center gap-3">
+                  <h2 className="text-xl font-bold text-gray-900 flex items-center justify-between">
                     Room {room.roomNumber}
 
-                    {/* Publish Status */}
+                    {/* Status Badge */}
                     {room?.toPublish?.status ? (
-                      <span className="px-3 py-1 bg-green-600 text-white text-xs rounded-full">
-                        Listed
+                      <span className="flex items-center gap-1 px-3 py-1 bg-green-600 text-white text-xs rounded-full shadow">
+                        <CheckCircle size={14} /> Listed
+                      </span>
+                    ) : room?.comment ? (
+                      <span className="flex items-center gap-1 px-3 py-1 bg-orange-500 text-white text-xs rounded-full shadow">
+                        <XCircle size={14} /> Not Verified
                       </span>
                     ) : (
-                      <span className="px-3 py-1 bg-orange-500 text-white text-xs rounded-full">
-                        Under Verification
+                      <span className="flex items-center gap-1 px-3 py-1 bg-yellow-500 text-white text-xs rounded-full shadow">
+                        <AlertCircle size={14} /> Under Verification
                       </span>
                     )}
                   </h2>
 
                   <p className="text-gray-600 mt-1 capitalize">{room.type} Room</p>
 
-                  {/* If Not Published, Show Banner */}
+                  {/* Verification Message / Comment */}
                   {!room?.toPublish?.status && (
-                    <>
-                      {room?.comment && (
-                        <p className="text-sm text-gray-700">{room.comment}</p>
+                    <div className="mt-3">
+                      {room?.comment ? (
+                        <p className="text-sm bg-orange-100 text-orange-800 p-2 rounded-lg shadow-sm">
+                          {room.comment}
+                        </p>
+                      ) : (
+                        <div className="bg-yellow-100 text-yellow-700 text-sm p-2 rounded-lg shadow-sm">
+                          This room is under admin verification. It will take 24 hours.
+                        </div>
                       )}
-
-                      <div className="mt-3 bg-yellow-100 text-yellow-700 text-sm p-2 rounded-lg">
-                        This room is under admin verification. It will take 24 hours.
-                      </div>
-                    </>
+                    </div>
                   )}
-
 
                   {/* Facilities */}
                   <div className="mt-4">
@@ -152,8 +159,9 @@ function ShowRooms() {
                     <button
                       onClick={() => deletethatroom(room._id)}
                       disabled={deleteLoading}
-                      className={`px-4 py-2 ${deleteLoading ? "bg-gray-400 cursor-not-allowed" : "bg-red-500 hover:bg-red-600"
-                        } text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all`}
+                      className={`px-4 py-2 ${
+                        deleteLoading ? "bg-gray-400 cursor-not-allowed" : "bg-red-500 hover:bg-red-600"
+                      } text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all`}
                     >
                       {deleteLoading ? "Deleting..." : "Delete"}
                     </button>

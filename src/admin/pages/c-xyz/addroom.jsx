@@ -73,6 +73,7 @@ function AddRoomForm() {
 
     toast.loading("Adding room...", { id: "ROOM_ADD" });
     await addRoom(formData);
+    navigate("/admin/properties")
   };
 
   useEffect(() => {

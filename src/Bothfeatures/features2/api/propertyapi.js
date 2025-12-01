@@ -1,9 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-
-
-
-const USER_API = "https://admin-backend-pgmega.onrender.com/api/property/";
-
+const USER_API = "http://localhost:5000/api/property/";
 
 const propertyApi = createApi({
     reducerPath: "propertyapi",
@@ -11,7 +7,9 @@ const propertyApi = createApi({
         baseUrl: USER_API,
         credentials: 'include',
     }),
+
     endpoints: (builder) => ({
+
         addbranch: builder.mutation({
             query: (payload) => ({
                 url: 'add',
@@ -19,11 +17,13 @@ const propertyApi = createApi({
                 body: payload,
             })
         }),
+
         getAllBranch: builder.query({
             query: () => ({
                 url: `get`
             })
         }),
+
         getAllBranchByOwner: builder.query({
             query: () => ({
                 url: `getalllbranchowner`
@@ -43,13 +43,15 @@ const propertyApi = createApi({
                 body: managerData,
             })
         }),
+
         changemanagerpass: builder.mutation({
             query: (payload) => ({
                 url: `/branchmanager/passwordchange`,
-                method: 'put',
+                method: 'PUT',
                 body: payload,
             })
         }),
+
         addRoom: builder.mutation({
             query: (formData) => ({
                 url: `addroom`,
@@ -57,18 +59,21 @@ const propertyApi = createApi({
                 body: formData,
             })
         }),
+
         deleteRoom: builder.mutation({
             query: (id) => ({
                 url: `deleteroom/${id}`,
-                method: 'Delete',
+                method: 'DELETE',
             })
         }),
+
         deleteProperty: builder.mutation({
             query: (id) => ({
                 url: `DeleteProperty/${id}`,
-                method: 'Delete',
+                method: 'DELETE',
             })
         }),
+
         addHotelRoom: builder.mutation({
             query: (dataToSend) => ({
                 url: `addhotelroom`,
@@ -83,25 +88,39 @@ const propertyApi = createApi({
             })
         }),
 
-
+        // ⭐ UPDATE ROOM DETAILS
         updateRoom: builder.mutation({
             query: ({ id, data }) => ({
                 url: `updateroom/${id}`,
-                method: "put",
+                method: "PUT",
                 body: data
             })
         }),
+
+        // ⭐ GET SINGLE ROOM
         getRoomById: builder.query({
-            query: (id) => ({
-                url: `getroombyid/${id}`
+            query: (roomId) => ({
+                url: `get/${roomId}`
             })
         }),
 
+        // ⭐ DELETE ONE IMAGE
+        deleteRoomImage: builder.mutation({
+            query: ({ id, imageurl }) => ({
+                url: `deleteroomimage`,
+                method: "DELETE",
+                body: { id, imageurl }
+            })
+        }),
 
-
-
-
-
+        // ⭐ ADD MULTIPLE IMAGES
+       addRoomImages: builder.mutation({
+      query: (formData) => ({
+        url: `addroomimages`,
+        method: "PUT",
+        body: formData,
+      }),
+    }),
 
 
     }),
@@ -122,7 +141,10 @@ export const {
     useAddRoomMutation,
     useAddHotelRoomMutation,
     useAddbranchmanagerMutation,
+
+    // ⬇ Newly added hooks
+    useDeleteRoomImageMutation,
+    useAddRoomImagesMutation,
 } = propertyApi;
+
 export default propertyApi;
-
-

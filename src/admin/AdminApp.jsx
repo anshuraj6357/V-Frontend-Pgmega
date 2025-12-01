@@ -34,7 +34,7 @@ export default function AdminApp() {
           <Route path="properties" element={<Properties />} />
           <Route path="addroom" element={<AddRoomForm />} />
           <Route path="add-payment" element={<AddPayment />} />
-          <Route path="edit-room/:id" element={<EditRoomForm />} />
+          <Route path="edit-room/:roomId" element={<EditRoomForm />} />
           <Route path="all-notpaid-tenant" element={<NotPaidTenants />} />
           <Route path="edit/:id" element={<EditStaff />} />
           <Route path="tenaantdetail/:id" element={<TenantDetails />} />

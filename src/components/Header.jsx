@@ -57,7 +57,7 @@ export default function Header() {
           <img
             src={logo}
             alt="Logo"
-            className="h-16 w-auto object-contain transition-transform duration-300 group-hover:scale-106"
+            className="h-16 w-auto object-contain transition-transform duration-300 group-hover:scale-10"
           />
         </Link>
 

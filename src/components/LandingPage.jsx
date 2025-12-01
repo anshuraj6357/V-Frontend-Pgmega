@@ -54,7 +54,9 @@ export default function LandingPage() {
   }, [pgApiData, wishlistData]);
 
   const handleFindPG = () => {
+
     setSearchError('');
+    navigate(`/search/${searchQuery}`)
     if (!searchQuery.trim()) {
       setSearchError('Please enter a PG name');
       return;
@@ -105,7 +107,8 @@ export default function LandingPage() {
                 onKeyPress={(e) => e.key === 'Enter' && handleFindPG()}
                 className="flex-1 px-3 py-3 rounded-full text-gray-900 text-base focus:outline-none focus:ring-4 focus:ring-blue-300 sm:px-6 sm:py-4"
               />
-              <button onClick={handleFindPG} className="bg-blue-600 text-white px-4 py-3 rounded-full hover:bg-blue-700 transition font-medium text-sm sm:px-8 sm:py-4 sm:text-base">Find</button>
+              <button 
+              onClick={handleFindPG} className="bg-blue-600 text-white px-4 py-3 rounded-full hover:bg-blue-700 transition font-medium text-sm sm:px-8 sm:py-4 sm:text-base">Find</button>
             </div>
             {searchError && <p className="text-red-300 text-sm mt-2 text-center">{searchError}</p>}
           </div>
@@ -297,4 +300,4 @@ export default function LandingPage() {
 
     </div>
   );
-}  
+}

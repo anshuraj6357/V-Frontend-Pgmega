@@ -12,6 +12,7 @@ import ContactUs from "./components/contactus";
 import PrivacyPolicy from "./components/privacypolicy";
 import TermsConditions from "./components/termsandcondition";
 import ShippingPolicy from "./components/shippingpolicy";
+import HelpCenter from "./components/HelpCenter.jsx";
 
 import DashboardHeader from "./admin/header";
 import AdminApp from "./admin/AdminApp";
@@ -77,6 +78,7 @@ function App() {
             <Route path="/privacypolicy" element={<PrivacyPolicy />} />
             <Route path="/termsandcondition" element={<TermsConditions />} />
             <Route path="/shippingpolicy" element={<ShippingPolicy />} />
+            <Route path="/helpcenter" element={<HelpCenter />} />
           
 
 

@@ -64,7 +64,10 @@ export default function Footer() {
             Support
           </h2>
           <ul className="space-y-2 text-sm opacity-90">
-            <li className="cursor-pointer hover:opacity-100 duration-200">
+            <li
+              onClick={() => navigate("/helpcenter")}
+              className="cursor-pointer hover:opacity-100 duration-200"
+            >
               Help Center
             </li>
             <li className="cursor-pointer hover:opacity-100 duration-200">

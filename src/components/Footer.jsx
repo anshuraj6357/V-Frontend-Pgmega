@@ -5,10 +5,24 @@ import {
   Linkedin,
   Twitter,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function Footer() {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Custom navigation function (navigate + scroll-to-top)
+  const goto = (path) => {
+    navigate(path);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  // Active styling
+  const linkClass = (path) =>
+    `cursor-pointer hover:opacity-100 duration-200 ${
+      location.pathname === path ? "text-green-400 font-semibold" : "opacity-90"
+    }`;
 
   return (
     <footer className="bg-gradient-to-b from-[#2c1a12] to-[#c62828] text-white pt-16 pb-10 px-6 sm:px-12 lg:px-24">
@@ -22,47 +36,42 @@ export default function Footer() {
             Company
           </h2>
           <ul className="space-y-2 text-sm opacity-90">
+
             <li
-              onClick={() => navigate("/aboutus")}
-              className="cursor-pointer hover:opacity-100 duration-200"
+              onClick={() => goto("/aboutus")}
+              className={linkClass("/aboutus")}
             >
               About Us
             </li>
 
-
-
-
-
-
-
-
-
-
             <li
-              onClick={() => navigate("/shippingpolicy")}
-              className="cursor-pointer hover:opacity-100 duration-200"
+              onClick={() => goto("/shippingpolicy")}
+              className={linkClass("/shippingpolicy")}
             >
               Shipping Policy
             </li>
+
             <li
-              onClick={() => navigate("/termsandcondition")}
-              className="cursor-pointer hover:opacity-100 duration-200"
+              onClick={() => goto("/termsandcondition")}
+              className={linkClass("/termsandcondition")}
             >
               Terms & Conditions
             </li>
+
             <li
-              onClick={() => navigate("/privacypolicy")}
-              className="cursor-pointer hover:opacity-100 duration-200"
+              onClick={() => goto("/privacypolicy")}
+              className={linkClass("/privacypolicy")}
             >
               Privacy Policy
             </li>
-            
+
             <li
-              onClick={() => navigate("/CancellationPolicy")}
-              className="cursor-pointer hover:opacity-100 duration-200"
+              onClick={() => goto("/CancellationPolicy")}
+              className={linkClass("/CancellationPolicy")}
             >
               Cancellation & Refund Policy
             </li>
+
           </ul>
         </div>
 
@@ -72,31 +81,35 @@ export default function Footer() {
             Support
           </h2>
           <ul className="space-y-2 text-sm opacity-90">
+
             <li
-              onClick={() => navigate("/helpcenter")}
-              className="cursor-pointer hover:opacity-100 duration-200"
+              onClick={() => goto("/helpcenter")}
+              className={linkClass("/helpcenter")}
             >
               Help Center
             </li>
-           <li
-              onClick={() => navigate("/faqs")}
-              className="cursor-pointer hover:opacity-100 duration-200"
+
+            <li
+              onClick={() => goto("/faqs")}
+              className={linkClass("/faqs")}
             >
               FAQs
             </li>
+
             <li
-              onClick={() => navigate("/customersupport")}
-              className="cursor-pointer hover:opacity-100 duration-200"
+              onClick={() => goto("/customersupport")}
+              className={linkClass("/customersupport")}
             >
               Customer Support
             </li>
 
             <li
-              onClick={() => navigate("/contactus")}
-              className="cursor-pointer hover:opacity-100 duration-200"
+              onClick={() => goto("/contactus")}
+              className={linkClass("/contactus")}
             >
               Contact Us
             </li>
+
           </ul>
         </div>
 
@@ -106,20 +119,14 @@ export default function Footer() {
             Services
           </h2>
           <ul className="space-y-2 text-sm opacity-90">
-            
-           
 
-       <li
-              onClick={() => navigate("/partnerwithroomgi")}
-              className="cursor-pointer hover:opacity-100 duration-200"
+            <li
+              onClick={() => goto("/partnerwithroomgi")}
+              className={linkClass("/partnerwithroomgi")}
             >
               Partner with Roomgi
             </li>
-            
 
-
-
-            
           </ul>
         </div>
 

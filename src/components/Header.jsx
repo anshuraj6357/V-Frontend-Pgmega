@@ -48,7 +48,7 @@ export default function Header() {
   };
 
   return (
-    <header className="backdrop-blur-xl bg-white/80 shadow-sm sticky top-0 z-50 border-b h-24">
+    <header className="backdrop-blur-xl bg-white/80 shadow-sm sticky top-0 z-50 border-b">
       <div className="max-w-7xl mx-auto px-4 py-1 flex justify-between items-center">
 
        <img

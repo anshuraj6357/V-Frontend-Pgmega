@@ -35,7 +35,7 @@ export default function CustomerSupport() {
         <h1 className="text-4xl font-extrabold text-gray-900 text-center mb-4">Customer Support</h1>
         <p className="text-center text-gray-600 mb-10 max-w-2xl mx-auto">
           We're here to help! Reach out to ROOMGI Support for issues related to bookings, payments,
-          PG/Hostel stays, or property listings.
+          PG Hotel, Hostel and Room stays, or property listings.
         </p>
 
         {/* Support Options */}

@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useGetAllFilteredQuery, useAppliedAllFilteredMutation } from "../Bothfeatures/features/api/allpg";
+import {
+  useGetAllFilteredQuery,
+  useAppliedAllFilteredMutation
+} from "../Bothfeatures/features/api/allpg";
 import { Loader2, Filter } from "lucide-react";
 
 export default function Searched() {
@@ -15,7 +18,7 @@ export default function Searched() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchError, setSearchError] = useState("");
 
-  // FILTER STATES (useState)
+  // FILTER STATES
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [min, setMin] = useState(0);
   const [max, setMax] = useState(999999);
@@ -23,7 +26,7 @@ export default function Searched() {
   const [type, setType] = useState("any");
   const [facilities, setFacilities] = useState([]);
 
-  // Search PG by name or category
+  // Search by category
   const handleFindPG = () => {
     if (!searchQuery.trim()) {
       setSearchError("Please enter PG name.");
@@ -39,7 +42,7 @@ export default function Searched() {
     setPgData(filtered || []);
   };
 
-  // Toggle Facilities
+  // Toggle facility
   const toggleFacility = (facility) => {
     setFacilities((prev) =>
       prev.includes(facility)
@@ -48,7 +51,7 @@ export default function Searched() {
     );
   };
 
-  // APPLY FILTERS (SEND JSON)
+  // Apply filters
   const handleApplyFilters = async () => {
     const filterBody = {
       city,
@@ -56,10 +59,8 @@ export default function Searched() {
       max,
       category,
       type,
-      facilities,
+      facilities
     };
-
-    console.log("SENDING FILTER BODY:", filterBody);
 
     await applyFilters(filterBody).unwrap();
     setIsFilterOpen(false);
@@ -71,7 +72,7 @@ export default function Searched() {
     if (pgdata) setPgData(pgdata?.data);
   }, [data, pgdata]);
 
-  if (pgisLoading) return <p>Loading filtered PGs...</p>;
+  if (pgisLoading) return <p>Loading filtered stays...</p>;
 
   return (
     <>
@@ -80,7 +81,7 @@ export default function Searched() {
         <div className="flex gap-3 w-full">
           <input
             type="text"
-            placeholder="Search PG..."
+            placeholder="Search PG Hotel, Hostel and Room..."
             value={searchQuery}
             onChange={(e) => {
               setSearchQuery(e.target.value);
@@ -110,10 +111,10 @@ export default function Searched() {
         )}
       </div>
 
-      {/* Filter Modal */}
+      {/* FILTER MODAL */}
       {isFilterOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center px-4">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center px-4 z-50">
+          <div className="bg-white rounded-xl p-6 w-full max-w-md shadow-lg">
             <h2 className="text-lg font-bold mb-4">Apply Filters</h2>
 
             {/* Price Range */}
@@ -202,7 +203,7 @@ export default function Searched() {
         </div>
       )}
 
-      {/* Loader */}
+      {/* LOADER */}
       {isLoading ? (
         <div className="flex justify-center items-center h-screen">
           <Loader2 className="animate-spin w-12 h-12" />
@@ -210,7 +211,7 @@ export default function Searched() {
       ) : (
         <div className="max-w-7xl mx-auto px-4 py-10">
           <h2 className="text-xl font-semibold mb-6">
-            PGs Available in {city}
+            PG Hotel, Hostel and Rooms Available in {city}
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -219,23 +220,64 @@ export default function Searched() {
                 <div
                   key={pg._id}
                   onClick={() => navigate(`/pg/${pg._id}`)}
-                  className="cursor-pointer bg-white rounded-xl shadow"
+                  className="bg-white rounded-2xl shadow-lg overflow-hidden border hover:shadow-2xl transition-all duration-300 cursor-pointer group"
                 >
-                  <img
-                    src={pg.roomImages?.[0]}
-                    className="h-48 w-full object-cover"
-                  />
+                  {/* Image */}
+                  <div className="relative">
+                    <img
+                      src={pg.roomImages?.[0]}
+                      alt={pg.category}
+                      className="h-52 w-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
 
-                  <div className="p-4">
-                    <h3 className="font-bold">{pg.category}</h3>
-                    <p className="text-gray-500">{pg.city}</p>
-                    <p className="font-bold text-blue-700">₹{pg.price}</p>
+                    {/* Price Tag */}
+                    <div className="absolute bottom-3 right-3 bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-semibold shadow-md">
+                      ₹{pg.price}
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="p-4 space-y-2">
+                    <h3 className="font-bold text-lg text-gray-900 truncate">
+                      {pg.category}
+                    </h3>
+
+                    <p className="text-gray-600 text-sm flex items-center gap-1">
+                      📍 {pg.city}
+                    </p>
+
+                    <p className="text-xs font-medium text-green-600">
+                      {pg.type === "any" ? "Available for All" : pg.type}
+                    </p>
+
+                    {/* Facilities */}
+                    <div className="flex flex-wrap gap-2 mt-2 text-xs text-gray-700">
+                      {pg.facilities?.slice(0, 4).map((f, i) => (
+                        <span
+                          key={i}
+                          className="bg-gray-100 px-2 py-1 rounded-full border text-gray-600"
+                        >
+                          {f}
+                        </span>
+                      ))}
+
+                      {pg.facilities?.length > 4 && (
+                        <span className="text-blue-600 font-medium text-xs">
+                          +{pg.facilities.length - 4} more
+                        </span>
+                      )}
+                    </div>
+
+                    {/* CTA */}
+                    <button className="w-full mt-3 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition">
+                      View Details
+                    </button>
                   </div>
                 </div>
               ))
             ) : (
               <p className="col-span-full text-center text-gray-500">
-                No PGs found
+                No PGs found.
               </p>
             )}
           </div>

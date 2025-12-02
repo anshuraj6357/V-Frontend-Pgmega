@@ -90,10 +90,7 @@ function AddRoomForm() {
   const handleAddRoom = async () => {
       console.log(roomData)
 
-    if (!roomData.branch || !roomData.roomNumber || !roomData.category) {
-      return toast.error("Please fill all required fields");
-    }
-  
+
     const formData = new FormData();
     formData.append("roomNumber", roomData.roomNumber);
     formData.append("type", roomData.type);

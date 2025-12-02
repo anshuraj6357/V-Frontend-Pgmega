@@ -8,14 +8,16 @@ export function AddHotelRoom() {
 
   const facilityOptions = [
     "AC",
-    "Non-AC",
-    "Attached Bathroom",
-    "Balcony",
-    "Cupboard",
-    "Geyser",
-    "Table",
-    "Fan",
-    "WiFi",
+                "Non-AC",
+                "Bathroom",
+                "WiFi",
+                "Power Backup",
+                "Laundry",
+                "CCTV",
+                "Parking",
+                "Refrigerator",
+                 "24x7 Electricity",
+              
   ];
 
   const [formData, setFormData] = useState({

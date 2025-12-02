@@ -171,7 +171,17 @@ export default function Searched() {
             <div className="mb-4">
               <label>Facilities</label>
               <div className="grid grid-cols-2 gap-2 mt-2">
-                {["Wifi", "AC", "Food", "Parking", "Laundry"].map((item) => (
+                {[ "AC",
+                "Non-AC",
+                "Bathroom",
+                "WiFi",
+                "Power Backup",
+                "Laundry",
+                "CCTV",
+                "Parking",
+                "Refrigerator",
+                 "24x7 Electricity",
+              ].map((item) => (
                   <label key={item} className="flex gap-2">
                     <input
                       type="checkbox"

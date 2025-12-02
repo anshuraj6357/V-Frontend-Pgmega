@@ -30,8 +30,17 @@ function AddRoomForm() {
     useGetAllBranchbybranchIdQuery();
 
   const facilityOptions = [
-    "AC", "Non-AC", "Attached Bathroom", "Balcony", "Cupboard",
-    "Geyser", "Table", "Fan", "WiFi"
+     "AC",
+                "Non-AC",
+                "Bathroom",
+                "WiFi",
+                "Power Backup",
+                "Laundry",
+                "CCTV",
+                "Parking",
+                "Refrigerator",
+                 "24x7 Electricity",
+              
   ];
 
   const handleFacilities = (facility) => {

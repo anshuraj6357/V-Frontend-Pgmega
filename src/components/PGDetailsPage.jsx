@@ -85,7 +85,7 @@ export default function PGDetailsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
+
 
       {/* IMAGE SLIDER */}
       <div className="max-w-6xl mx-auto mt-8 relative h-96 rounded-xl overflow-hidden shadow-lg">
@@ -105,37 +105,67 @@ export default function PGDetailsPage() {
       </div>
 
       {/* MAIN CONTENT */}
-      <div className="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* LEFT: Info blocks */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* BASIC INFO BLOCK */}
+      <div className="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 lg:grid-cols-3 gap-10">
+
+        {/* LEFT SIDE — INFORMATION */}
+        <div className="lg:col-span-2 space-y-8">
+
+          {/* BASIC INFORMATION */}
           <InfoBlock title="Basic Information">
-            <h2 className="text-2xl font-bold">{pg.branch.name}</h2>
-            <div className="flex items-center space-x-4 mt-1">
-              <Star className="w-5 h-5 text-yellow-500" />
-              <span>{pg.branch.Rating || 0}</span>
-              <BadgeCheck className="w-5 h-5 text-green-600" />
-              <span className="text-sm text-green-600">Verified</span>
+            <div className="space-y-4">
+
+              <h2 className="text-3xl font-extrabold text-gray-900 flex items-center gap-3">
+                {pg.branch.name}
+                <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm flex items-center gap-1">
+                  <BadgeCheck className="w-4 h-4" /> Verified
+                </span>
+              </h2>
+
+              <div className="flex items-center gap-4 mt-2">
+                <Star className="w-6 h-6 text-yellow-500" />
+                <span className="font-semibold text-gray-800 text-lg">{pg.branch.Rating || 0}</span>
+              </div>
+
+              <div className="border-t pt-4 space-y-2 text-gray-700">
+                <p className="text-base"><strong>Address:</strong> {pg.branch.address}</p>
+                <p className="text-base"><strong>City:</strong> {pg.city}</p>
+                <p className="text-base"><strong>Room Type:</strong> {pg.type}</p>
+                <p className="text-base"><strong>Furnished:</strong> {pg.furnishedType}</p>
+
+                <p className="text-base font-semibold">
+                  <strong>Availability: </strong>
+                  <span className={`${pg.availabilityStatus === "Available" ? "text-green-600" : "text-red-600"}`}>
+                    {pg.availabilityStatus}
+                  </span>
+                </p>
+              </div>
+
             </div>
-            <p className="mt-2 text-gray-700">{pg.branch.address}</p>
-            <p className="mt-1 text-gray-700">City: {pg.city}</p>
-            <p className="mt-1 text-gray-700">Room Type: {pg.type}</p>
-            <p className="mt-1 text-gray-700">Furnished: {pg.furnishedType}</p>
-            <p className="mt-1 text-gray-700">Floor: {pg.floor}</p>
-            <p className="mt-1 text-gray-700">Availability: {pg.availabilityStatus}</p>
           </InfoBlock>
 
-          {/* DESCRIPTION BLOCK */}
+          {/* DESCRIPTION */}
           {pg.description && (
             <InfoBlock title="Description">
-              <p className="text-gray-700">{pg.description}</p>
+              <p className="text-gray-700 leading-relaxed text-[15px]">{pg.description}</p>
+            </InfoBlock>
+          )}\
+
+          {pg.allowedFor && (
+            <InfoBlock title="Allowed For">
+              <div className="flex items-center gap-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                <span className="text-blue-600 font-bold text-xl">✔</span>
+                <span className="text-gray-800 font-semibold text-lg">
+                  {pg.allowedFor}
+                </span>
+              </div>
             </InfoBlock>
           )}
 
-          {/* RULES BLOCK */}
+
+          {/* RULES */}
           {pg.rules?.length > 0 && (
             <InfoBlock title="Rules">
-              <ul className="list-disc list-inside text-gray-700">
+              <ul className="list-disc list-inside space-y-2 text-[15px] text-gray-700">
                 {pg.rules.map((rule, i) => (
                   <li key={i}>{rule}</li>
                 ))}
@@ -143,10 +173,10 @@ export default function PGDetailsPage() {
             </InfoBlock>
           )}
 
-          {/* NOT ALLOWED BLOCK */}
+          {/* NOT ALLOWED */}
           {pg.notAllowed?.length > 0 && (
             <InfoBlock title="Not Allowed">
-              <ul className="list-disc list-inside text-gray-700">
+              <ul className="list-disc list-inside space-y-2 text-[15px] text-gray-700">
                 {pg.notAllowed.map((item, i) => (
                   <li key={i}>{item}</li>
                 ))}
@@ -154,46 +184,77 @@ export default function PGDetailsPage() {
             </InfoBlock>
           )}
 
-          {/* FACILITIES BLOCK */}
+          {/* FACILITIES */}
           {pg.facilities?.length > 0 && (
             <InfoBlock title="Facilities">
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 {pg.facilities.map((item, i) => (
-                  <div key={i} className="flex items-center gap-2 bg-gray-100 p-2 rounded-md">
-                    <span className="text-green-600 font-bold">✔</span>
-                    <span className="text-gray-700">{item}</span>
+                  <div key={i} className="flex items-center gap-3 bg-gray-100 shadow-sm border border-gray-200 p-3 rounded-lg">
+                    <span className="text-green-600 text-xl font-bold">✔</span>
+                    <span className="font-medium text-gray-800">{item}</span>
                   </div>
                 ))}
               </div>
             </InfoBlock>
           )}
+
         </div>
 
-        {/* RIGHT: Rent & Actions */}
-        <div className="space-y-6">
-          <InfoBlock title="Rent">
-            <Price label="Rent per Month" value={pg.price} />
+        {/* RIGHT SIDE — RENT & ACTIONS */}
+        <div className="space-y-8">
+
+          {/* RENT CARD */}
+          <InfoBlock title="Rent Details">
+            <div className="text-center py-4">
+              <p className="text-gray-500 text-sm">Rent per Month</p>
+              <h3 className="text-4xl font-bold text-gray-900 mt-1">₹{pg.price}</h3>
+            </div>
           </InfoBlock>
 
+          {/* ACTION BUTTONS */}
           <InfoBlock title="Actions">
             <button
               onClick={handleBook}
-              className="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition"
+              className="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold 
+        hover:bg-blue-700 transition shadow-lg hover:shadow-xl"
             >
               Book Now
             </button>
 
-            <div className="flex flex-col mt-4 space-y-3">
-              <Action icon={<Phone />} label="Contact Owner" whatsappNumber="+919693915693" isAuthenticated={isAuthenticated} onAuthOpen={() => setIsAuthModalOpen(true)} />
-              <Action icon={<Navigation />} label="Get Directions" onClick={handleGetDirections} isAuthenticated={isAuthenticated} onAuthOpen={() => setIsAuthModalOpen(true)} />
-              <Action icon={<Share2 />} label="Share PG" onClick={sharePG} isAuthenticated={isAuthenticated} onAuthOpen={() => setIsAuthModalOpen(true)} />
+            <div className="flex flex-col mt-5 space-y-4">
+
+              <Action
+                icon={<Phone />}
+                label="Contact Owner"
+                whatsappNumber="+919693915693"
+                isAuthenticated={isAuthenticated}
+                onAuthOpen={() => setIsAuthModalOpen(true)}
+              />
+
+              <Action
+                icon={<Navigation />}
+                label="Get Directions"
+                onClick={handleGetDirections}
+                isAuthenticated={isAuthenticated}
+                onAuthOpen={() => setIsAuthModalOpen(true)}
+              />
+
+              <Action
+                icon={<Share2 />}
+                label="Share PG"
+                onClick={sharePG}
+                isAuthenticated={isAuthenticated}
+                onAuthOpen={() => setIsAuthModalOpen(true)}
+              />
+
             </div>
           </InfoBlock>
+
         </div>
       </div>
 
       {isAuthModalOpen && <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />}
-      <Footer />
+
     </div>
   );
 }

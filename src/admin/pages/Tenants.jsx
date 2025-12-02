@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Plus, Search, Eye, FileText, Download, UserX } from "lucide-react";
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-hot-toast"
 
 import {
   useAddTenantMutation,
@@ -66,20 +67,33 @@ export default function Tenants() {
     e.preventDefault();
     try {
       console.log("🏠 Property Data:", formdata);
-      await addTenant(formdata).unwrap();
-      console.log("🏠 Property Data:", formdata);
-      console.log(data)
+
+      const res = await addTenant(formdata).unwrap();
+
+      toast.success("Tenant added successfully! 🎉");
 
       setadding(false);
-      setformdata(' ')
+      setformdata({
+        contactNumber: "",
+        name: "",
+        Rent: "",
+        dues: "",
+        advanced: "",
+        idProof: "",
+        idProofType: "",
+        emergencyContactNumber: "",
+        documentsPhoto: "",
+        roomNumber: "",
+        branch: ""
+      });
 
     } catch (error) {
-      console.log(error)
+      console.log(error);
 
+      toast.error(error?.data?.message || "Failed to add tenant ❌");
     }
-
-
   };
+
 
   const handleChangestatus = async (e) => {
 
@@ -209,198 +223,198 @@ export default function Tenants() {
 
 
       {/* Adding tenant */}
-     {adding && (
-  <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn">
-    <div className="bg-white/95 shadow-2xl rounded-2xl w-full max-w-2xl max-h-[92vh] overflow-y-auto border border-white/40">
+      {adding && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn">
+          <div className="bg-white/95 shadow-2xl rounded-2xl w-full max-w-2xl max-h-[92vh] overflow-y-auto border border-white/40">
 
-      {/* Header */}
-      <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-200 px-6 md:px-8 py-5 rounded-t-2xl shadow-sm z-10">
-        <h2 className="text-2xl md:text-3xl font-bold text-[#1e3a5f]">Add New Tenant</h2>
-        <p className="text-gray-500 text-sm md:text-base mt-1">
-          Fill all the details correctly before saving
-        </p>
-      </div>
+            {/* Header */}
+            <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-200 px-6 md:px-8 py-5 rounded-t-2xl shadow-sm z-10">
+              <h2 className="text-2xl md:text-3xl font-bold text-[#1e3a5f]">Add New Tenant</h2>
+              <p className="text-gray-500 text-sm md:text-base mt-1">
+                Fill all the details correctly before saving
+              </p>
+            </div>
 
-      {/* Form Content */}
-      <div className="px-6 md:px-8 py-6 space-y-5">
+            {/* Form Content */}
+            <div className="px-6 md:px-8 py-6 space-y-5">
 
-        {/* Name */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Name</label>
-          <input
-            type="text"
-            name="name"
-            value={formdata.name}
-            onChange={handleChange}
-            placeholder="Tenant Name"
-            className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
-            required
-          />
-        </div>
+              {/* Name */}
+              <div>
+                <label className="block text-gray-700 font-medium mb-1">Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formdata.name}
+                  onChange={handleChange}
+                  placeholder="Tenant Name"
+                  className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
+                  required
+                />
+              </div>
 
-        {/* Contact Number */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Contact Number</label>
-          <input
-            type="number"
-            name="contactNumber"
-            value={formdata.contactNumber}
-            onChange={handleChange}
-            placeholder="Enter contact number"
-            className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
-            required
-          />
-        </div>
+              {/* Contact Number */}
+              <div>
+                <label className="block text-gray-700 font-medium mb-1">Contact Number</label>
+                <input
+                  type="number"
+                  name="contactNumber"
+                  value={formdata.contactNumber}
+                  onChange={handleChange}
+                  placeholder="Enter contact number"
+                  className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
+                  required
+                />
+              </div>
 
-        {/* Rent & Dues */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-gray-700 font-medium mb-1">Rent</label>
-            <input
-              type="number"
-              name="Rent"
-              value={formdata.Rent}
-              onChange={handleChange}
-              placeholder="Monthly Rent"
-              className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
-            />
+              {/* Rent & Dues */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-gray-700 font-medium mb-1">Rent</label>
+                  <input
+                    type="number"
+                    name="Rent"
+                    value={formdata.Rent}
+                    onChange={handleChange}
+                    placeholder="Monthly Rent"
+                    className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 font-medium mb-1">Dues</label>
+                  <input
+                    type="number"
+                    name="dues"
+                    value={formdata.dues}
+                    onChange={handleChange}
+                    placeholder="Pending Dues"
+                    className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
+                  />
+                </div>
+              </div>
+
+              {/* Advance Payment */}
+              <div>
+                <label className="block text-gray-700 font-medium mb-1">Advance Payment</label>
+                <input
+                  type="number"
+                  name="advanced"
+                  value={formdata.advanced}
+                  onChange={handleChange}
+                  placeholder="Advance amount paid"
+                  className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
+                />
+              </div>
+
+              {/* ID Proof */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-gray-700 font-medium mb-1">ID Proof Type</label>
+                  <select
+                    name="idProofType"
+                    value={formdata.idProofType}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
+                    required
+                  >
+                    <option value="">Select ID Proof</option>
+                    <option value="Aadhar-Card">Aadhar Card</option>
+                    <option value="PAN-Card">PAN Card</option>
+                    <option value="Voter-Id-Card">Voter ID Card</option>
+                    <option value="Passport">Passport</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-gray-700 font-medium mb-1">ID Proof Number</label>
+                  <input
+                    type="text"
+                    name="idProof"
+                    value={formdata.idProof}
+                    onChange={handleChange}
+                    placeholder="Enter ID proof number"
+                    className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Emergency Contact */}
+              <div>
+                <label className="block text-gray-700 font-medium mb-1">Emergency Contact Number</label>
+                <input
+                  type="number"
+                  name="emergencyContactNumber"
+                  value={formdata.emergencyContactNumber}
+                  onChange={handleChange}
+                  placeholder="Enter emergency contact number"
+                  className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
+                />
+              </div>
+
+              {/* Room Number */}
+              <div>
+                <label className="block text-gray-700 font-medium mb-1">Room Number</label>
+                <input
+                  type="text"
+                  name="roomNumber"
+                  value={formdata.roomNumber}
+                  onChange={handleChange}
+                  placeholder="Enter room number"
+                  className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
+                  required
+                />
+              </div>
+
+              {/* Branch */}
+              <div>
+                <label className="block text-gray-700 font-medium mb-1">Select Branch</label>
+                <select
+                  name="branch"
+                  value={formdata.branch}
+                  onChange={handleChange}
+                  className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
+                  required
+                >
+                  <option value="">Select Branch</option>
+                  {alldata?.allbranch?.map((branch) => (
+                    <option key={branch._id} value={branch._id}>
+                      {branch.address}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* File Upload */}
+              <div>
+                <label className="block text-gray-700 font-medium mb-1">Documents / Photo</label>
+                <input
+                  type="file"
+                  name="documentsPhoto"
+                  onChange={(e) =>
+                    setformdata({ ...formdata, documentsPhoto: e.target.files[0] })
+                  }
+                  className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
+                />
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="sticky bottom-0 bg-white/95 backdrop-blur-sm border-t px-6 md:px-8 py-5 flex flex-col sm:flex-row gap-3 sm:gap-4 shadow-md rounded-b-2xl">
+              <button
+                onClick={() => navigate(-1)}
+                className="flex-1 py-3 border border-gray-300 rounded-xl hover:bg-gray-100 transition"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveTenant}
+                className="flex-1 py-3 bg-[#ff6b35] text-white rounded-xl hover:bg-[#e25a2d] shadow-md transition"
+              >
+                Save Tenant
+              </button>
+            </div>
           </div>
-          <div>
-            <label className="block text-gray-700 font-medium mb-1">Dues</label>
-            <input
-              type="number"
-              name="dues"
-              value={formdata.dues}
-              onChange={handleChange}
-              placeholder="Pending Dues"
-              className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
-            />
-          </div>
         </div>
-
-        {/* Advance Payment */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Advance Payment</label>
-          <input
-            type="number"
-            name="advanced"
-            value={formdata.advanced}
-            onChange={handleChange}
-            placeholder="Advance amount paid"
-            className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
-          />
-        </div>
-
-        {/* ID Proof */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-gray-700 font-medium mb-1">ID Proof Type</label>
-            <select
-              name="idProofType"
-              value={formdata.idProofType}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
-              required
-            >
-              <option value="">Select ID Proof</option>
-              <option value="Aadhar-Card">Aadhar Card</option>
-              <option value="PAN-Card">PAN Card</option>
-              <option value="Voter-Id-Card">Voter ID Card</option>
-              <option value="Passport">Passport</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-gray-700 font-medium mb-1">ID Proof Number</label>
-            <input
-              type="text"
-              name="idProof"
-              value={formdata.idProof}
-              onChange={handleChange}
-              placeholder="Enter ID proof number"
-              className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
-              required
-            />
-          </div>
-        </div>
-
-        {/* Emergency Contact */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Emergency Contact Number</label>
-          <input
-            type="number"
-            name="emergencyContactNumber"
-            value={formdata.emergencyContactNumber}
-            onChange={handleChange}
-            placeholder="Enter emergency contact number"
-            className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
-          />
-        </div>
-
-        {/* Room Number */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Room Number</label>
-          <input
-            type="text"
-            name="roomNumber"
-            value={formdata.roomNumber}
-            onChange={handleChange}
-            placeholder="Enter room number"
-            className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
-            required
-          />
-        </div>
-
-        {/* Branch */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Select Branch</label>
-          <select
-            name="branch"
-            value={formdata.branch}
-            onChange={handleChange}
-            className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
-            required
-          >
-            <option value="">Select Branch</option>
-            {alldata?.allbranch?.map((branch) => (
-              <option key={branch._id} value={branch._id}>
-                {branch.address}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* File Upload */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Documents / Photo</label>
-          <input
-            type="file"
-            name="documentsPhoto"
-            onChange={(e) =>
-              setformdata({ ...formdata, documentsPhoto: e.target.files[0] })
-            }
-            className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
-          />
-        </div>
-      </div>
-
-      {/* Footer */}
-      <div className="sticky bottom-0 bg-white/95 backdrop-blur-sm border-t px-6 md:px-8 py-5 flex flex-col sm:flex-row gap-3 sm:gap-4 shadow-md rounded-b-2xl">
-        <button
-          onClick={() => navigate(-1)}
-          className="flex-1 py-3 border border-gray-300 rounded-xl hover:bg-gray-100 transition"
-        >
-          Cancel
-        </button>
-        <button
-          onClick={handleSaveTenant}
-          className="flex-1 py-3 bg-[#ff6b35] text-white rounded-xl hover:bg-[#e25a2d] shadow-md transition"
-        >
-          Save Tenant
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+      )}
 
 
 

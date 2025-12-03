@@ -1,16 +1,84 @@
 import { useState, useEffect, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Phone, Navigation, Share2, Star, BadgeCheck, Loader2, MapPin } from "lucide-react";
+import { Phone, Loader2, Navigation, Share2, Star, BadgeCheck, MapPin } from "lucide-react";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
+
 
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import AuthModal from "../components/AuthModal";
 import { useGetPgByIdQuery } from "../Bothfeatures/features/api/allpg.js";
+import { useRazorpayPaymentVerifyMutation, useRazorpayPaymentMutation } from "../Bothfeatures/features2/api/paymentapi";
+
+
+
+
+// ------------------ RAZORPAY PAYMENT FUNCTION ------------------
+async function startPayment(amount, razorpayPayment, razorpayPaymentVerify) {
+  try {
+    // 1️⃣ Create Order via RTK Query
+    const { data: orderData, error } = await razorpayPayment({ amount: amount * 100 });
+
+    if (error || !orderData?.order) {
+      toast.error("Failed to create order");
+      return;
+    }
+
+    const order = orderData.order;
+    console.log("Order:", order);
+
+    // 2️⃣ Razorpay Payment Options
+    const options = {
+      key: "rzp_live_Rn8nwfw3Hdmb8E",
+      amount: order.amount,
+      currency: order.currency,
+      name: "Roomgi.com",
+      description: "PG/hotel/rental room Booking Payment",
+      order_id: order.id,
+
+      handler: async function (response) {
+        // 3️⃣ Verify Payment
+        const { data: verifyData, error: verifyError } = await razorpayPaymentVerify(response);
+
+        if (verifyError || !verifyData?.success) {
+          if (verifyError) {
+            console.log("verifyError", verifyError)
+          }
+           if (!verifyData?.success) {
+            console.log("!verifyData?.success", !verifyData?.success)
+          }
+
+
+          toast.error("Payment Verification Failed ❌");
+        } else {
+          toast.success("Payment Successful ✔");
+        }
+      },
+
+      prefill: {
+        name: "Guest User",
+        email: "guest@example.com",
+      },
+
+      theme: { color: "#3399cc" },
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+
+  } catch (err) {
+    console.log(err);
+    toast.error("Payment Error!");
+  }
+}
+
 
 export default function PGDetailsPage() {
   const navigate = useNavigate();
+
+  const [razorpayPayment, { isLoading: razorpaypaymentloading }] = useRazorpayPaymentMutation();
+  const [razorpayPaymentVerify] = useRazorpayPaymentVerifyMutation();
   const { user, isAuthenticated } = useSelector((state) => state.auth);
   const { id } = useParams();
   const { data, isLoading, isError } = useGetPgByIdQuery(id);
@@ -38,9 +106,9 @@ export default function PGDetailsPage() {
     }
   }, []);
 
-  const handleBook = () => {
-    if (!isAuthenticated) return setIsAuthModalOpen(true);
-    navigate(`/book/${pg._id}`);
+  const handleBook = (amount) => {
+    // if (!isAuthenticated) return setIsAuthModalOpen(true);
+    startPayment(amount, razorpayPayment, razorpayPaymentVerify)
   };
 
   const handleGetDirections = () => {
@@ -202,24 +270,87 @@ export default function PGDetailsPage() {
 
         {/* RIGHT SIDE — RENT & ACTIONS */}
         <div className="space-y-8">
+          {
+            pg.category === "Pg" ? (
+              <>
+                {/* PG RENT CARD */}
+                <InfoBlock title="Rent Details">
+                  <div className="text-center py-4">
+                    <p className="text-gray-500 text-sm">Rent per Month</p>
+                    <h3 className="text-4xl font-bold text-gray-900 mt-1">₹{pg.price}</h3>
+                  </div>
+                  <div className="w-full">
+                    {razorpaypaymentloading ? (
+                      <button
+                        disabled
+                        className="flex items-center justify-center gap-2 w-full bg-blue-600 text-white py-4 rounded-xl font-semibold shadow-lg cursor-not-allowed
+                 hover:bg-blue-600 transition transform"
+                      >
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        <span>Processing Payment...</span>
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => handleBook(pg.price)}
+                        className="flex flex-col items-center justify-center gap-2 w-full bg-blue-600 text-white py-4 rounded-xl font-semibold shadow-lg 
+                 hover:bg-blue-700 transition transform hover:-translate-y-1 hover:scale-105"
+                      >
+                        <span className="text-lg">Monthly Booking</span>
+                        <span className="text-sm">₹{pg.price} / month</span>
+                      </button>
+                    )}
+                  </div>
+
+
+
+                </InfoBlock>
+
+              </>
+            ) : (
+              <>
+                {/* NOT PG → SHOW PER DAY / PER NIGHT / PER HOUR */}
+                <InfoBlock title="Choose Booking Type">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+
+                    <button
+                      onClick={() => handleBook(pg.price)}
+                      className="flex flex-col items-center justify-center gap-2 w-full bg-green-600 text-white py-4 rounded-xl font-semibold shadow-lg hover:bg-green-700 transition transform hover:-translate-y-1 hover:scale-105"
+                    >
+                      <span className="text-lg">Per Day</span>
+                      <span className="text-sm">₹{pg.price} / day</span>
+                    </button>
+
+
+                    <button
+                      onClick={() => handleBook("monthly")}
+                      className="flex flex-col items-center justify-center gap-2 w-full bg-indigo-600 text-white py-4 rounded-xl font-semibold shadow-lg hover:bg-indigo-700 transition transform hover:-translate-y-1 hover:scale-105"
+                    >
+                      <span className="text-lg">Per Night</span>
+                      <span className="text-sm">₹{pg.rentperNight} / night</span>
+                    </button>
+
+                    <button
+                      onClick={() => handleBook("monthly")}
+                      className="flex flex-col items-center justify-center gap-2 w-full bg-orange-600 text-white py-4 rounded-xl font-semibold shadow-lg hover:bg-orange-700 transition transform hover:-translate-y-1 hover:scale-105"
+                    >
+                      <span className="text-lg">Per Hour</span>
+                      <span className="text-sm">₹{Math.ceil(pg.rentperhour)} / hour</span>
+                    </button>
+
+                  </div>
+                </InfoBlock>
+
+              </>
+            )
+          }
+
 
           {/* RENT CARD */}
-          <InfoBlock title="Rent Details">
-            <div className="text-center py-4">
-              <p className="text-gray-500 text-sm">Rent per Month</p>
-              <h3 className="text-4xl font-bold text-gray-900 mt-1">₹{pg.price}</h3>
-            </div>
-          </InfoBlock>
+
 
           {/* ACTION BUTTONS */}
           <InfoBlock title="Actions">
-            <button
-              onClick={handleBook}
-              className="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold 
-        hover:bg-blue-700 transition shadow-lg hover:shadow-xl"
-            >
-              Book Now
-            </button>
+
 
             <div className="flex flex-col mt-5 space-y-4">
 

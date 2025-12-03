@@ -3,13 +3,13 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 
 
-const USER_API= "http://localhost:5000/api/payment";
+const USER_API = "http://localhost:5000/api/payment";
 export const paymentApi = createApi({
   reducerPath: "paymentApi",
-   baseQuery: fetchBaseQuery({
-      baseUrl: USER_API,
-      credentials: 'include',
-    }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: USER_API,
+    credentials: 'include',
+  }),
 
 
   endpoints: (builder) => ({
@@ -25,6 +25,20 @@ export const paymentApi = createApi({
         method: "POST",
         body,
       }),
+    }),
+    razorpayPayment: builder.mutation({
+      query: (amount) => ({
+        url: `create-order`,
+        method: 'POST',
+        body: amount,
+      })
+    }),
+    razorpayPaymentVerify: builder.mutation({
+      query: (response) => ({
+        url: `verify-payment`,
+        method: 'POST',
+        body: response,
+      })
     }),
 
     // 🔹 3. Create a new expense
@@ -48,6 +62,8 @@ export const paymentApi = createApi({
 
 export const {
   useGetAllPaymentsQuery,
+  useRazorpayPaymentVerifyMutation,
+  useRazorpayPaymentMutation,
   useCreatePaymentMutation,
   useCreateExpenseMutation,
   useGetRevenueDetailsQuery,

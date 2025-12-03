@@ -44,6 +44,8 @@ const propertyApi = createApi({
             })
         }),
 
+      
+
         changemanagerpass: builder.mutation({
             query: (payload) => ({
                 url: `/branchmanager/passwordchange`,
@@ -128,6 +130,7 @@ const propertyApi = createApi({
 });
 
 export const {
+  
     useDeletePropertyMutation,
     useChangemanagerpassMutation,
     useGetAllBranchByOwnerQuery,

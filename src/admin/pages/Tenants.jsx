@@ -1,14 +1,13 @@
 import { useState, useEffect } from "react";
-import { Plus, Search, Eye, FileText, Download, UserX } from "lucide-react";
+import { Plus, Search, Eye, FileText, Download, UserX, Loader2 } from "lucide-react";
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-hot-toast"
+import toast, { Toaster } from "react-hot-toast";
 
 import {
   useAddTenantMutation,
   useChangeStatusQuery,
   useGetStatusQuery,
-
   useGetAllTenantQuery
 } from "../../Bothfeatures/features2/api/tenant"
 
@@ -22,7 +21,7 @@ export default function Tenants() {
   const { data: alldata } = useGetAllBranchbybranchIdQuery()
   console.log("user", user)
   const navigate = useNavigate()
-  const [addTenant, { data, isSuccess, refetch }] = useAddTenantMutation();
+  const [addTenant, { data, isSuccess, isloading: addloading, refetch }] = useAddTenantMutation();
   const { data: tenantdata, refetch: datarefetch } = useGetAllTenantQuery();
   const [tenant, settenant] = useState(null)
 
@@ -43,9 +42,11 @@ export default function Tenants() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filter, setFilter] = useState("all");
   const [selectedTenant, setSelectedTenant] = useState(null);
-  const { data: tenantStatusData, isFetching, isError } = useChangeStatusQuery(selectedTenant, {
-    skip: !selectedTenant,
-  });
+  const { data: tenantStatusData, error, isSuccess: statussuccess, isLoading: statusloading, isFetching, isError } =
+    useChangeStatusQuery(selectedTenant, {
+      skip: !selectedTenant,
+    });
+
   const { data: statusdata } = useGetStatusQuery(filter);
 
   const DetailofTenant = (id) => {
@@ -88,8 +89,6 @@ export default function Tenants() {
       });
 
     } catch (error) {
-      console.log(error);
-
       toast.error(error?.data?.message || "Failed to add tenant ❌");
     }
   };
@@ -104,23 +103,34 @@ export default function Tenants() {
 
 
   useEffect(() => {
-    console.log("📡 Fetching tenants from backend...");
-    if (!isSuccess) {
-      console.log(data?.message);
+
+    if (isSuccess) {
+      console.log("📡 Fetching tenants from backend...");
+      // toast.error(data?.message);
+    }
+    if (isError) {
+    
+      toast.error(` Status change failed: ${error?.data?.message || "Unknown error"}`);
+    }
+
+
+    if (statussuccess) {
+     
+       toast.success("tenant Removed SuccessFully")
     }
     if (datarefetch) {
       datarefetch();
     }
     if (statusdata) {
       settenant(statusdata?.statususer)
-      console.log(statusdata?.statususer)
+      console.log("dfcgvhbn", statusdata?.statususer)
     }
     if (alldata) {
       console.log("alldata", alldata?.allbranch)
     }
 
 
-  }, [isSuccess, tenantStatusData, statusdata, alldata, datarefetch]);
+  }, [isSuccess, statussuccess, tenantStatusData, statusdata, alldata, isError, datarefetch]);
 
   const handleAddTenant = () => {
     setadding(true)
@@ -137,6 +147,8 @@ export default function Tenants() {
 
   return (
     <div className="space-y-6">
+         <Toaster position="top-right" />
+
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-white p-6 rounded-xl shadow-sm border border-gray-200">
         <div>
@@ -405,12 +417,20 @@ export default function Tenants() {
               >
                 Cancel
               </button>
-              <button
-                onClick={handleSaveTenant}
-                className="flex-1 py-3 bg-[#ff6b35] text-white rounded-xl hover:bg-[#e25a2d] shadow-md transition"
-              >
-                Save Tenant
-              </button>
+
+              {
+                addloading ? <>
+                  <Loader2 className="h-5 w-5 animate-spin" />
+
+                </> : <>
+                  <button
+                    onClick={handleSaveTenant}
+                    className="flex-1 py-3 bg-[#ff6b35] text-white rounded-xl hover:bg-[#e25a2d] shadow-md transition"
+                  >
+                  </button>
+                </>
+              }
+
             </div>
           </div>
         </div>
@@ -544,10 +564,15 @@ export default function Tenants() {
               {t.status === "Active" ? (
                 <button
                   onClick={() => handleCheckoutTenant(t._id)}
+                  disabled={statusloading}
                   className="flex-1 py-2.5 bg-red-500 text-white rounded-xl shadow-md hover:bg-red-600 
-                       hover:shadow-lg transition-all duration-300"
+               hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2"
                 >
-                  Check-Out
+                  {statusloading ? (
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                  ) : (
+                    "Check-Out"
+                  )}
                 </button>
               ) : (
                 <button
@@ -557,6 +582,7 @@ export default function Tenants() {
                   Inactive
                 </button>
               )}
+
             </div>
           </div>
         ))}

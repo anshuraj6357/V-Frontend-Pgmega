@@ -135,105 +135,96 @@ export default function LandingPage() {
                 <div
                   key={pg._id}
                   onClick={() => navigate(`/pg/${pg._id}`)}
-                  className="cursor-pointer bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-200 hover:-translate-y-2"
+                  className="cursor-pointer rounded-2xl overflow-hidden border border-gray-200 bg-white 
+          hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
                 >
-                  {/* IMAGE + BADGES */}
-                  <div className="relative group">
+                  {/* Image */}
+                  <div className="relative">
                     <img
                       src={pg?.roomImages?.[0]}
                       alt={pg?.branch?.name}
-                      className="h-48 w-full object-cover rounded-t-2xl transition-transform duration-300 group-hover:scale-110"
+                      className="h-56 w-full object-cover"
                     />
 
-                    {/* Wishlist Button */}
+                    {/* Heart Icon */}
                     <div
                       onClick={(e) => e.stopPropagation()}
                       className="absolute top-4 right-4"
                     >
-                      <WishlistButton
-                        pg={pg}
-                        onAuthOpen={() => setIsAuthModalOpen(true)}
-                      />
+                      <WishlistButton pg={pg} onAuthOpen={() => setIsAuthModalOpen(true)} />
                     </div>
 
                     {/* Category Tag */}
-                    <span className="absolute bottom-4 left-4 bg-white/90 backdrop-blur text-black text-xs font-semibold px-3 py-1 rounded-full shadow-md">
+                    <span
+                      className={`
+    absolute bottom-3 left-3 px-3 py-1 text-xs rounded-full shadow font-medium 
+    ${pg?.category === "Pg" ? "bg-blue-100 text-blue-700" : ""}
+    ${pg?.category === "Room" ? "bg-green-100 text-green-700" : ""}
+    ${pg?.category === "Hotel" ? "bg-purple-100 text-purple-700" : ""}
+  `}
+                    >
                       {pg?.category}
                     </span>
+
                   </div>
 
-                  {/* CONTENT */}
-                  <div className="p-5 space-y-2">
+                  {/* Content */}
+                  <div className="p-5 space-y-3">
                     {/* Title */}
-                    <h3 className="text-lg font-bold text-gray-900 leading-tight">
-                      {pg?.branch?.name} - Room {pg?.roomNumber}
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      {pg?.branch?.name} – Room {pg?.roomNumber}
                     </h3>
 
                     {/* Address */}
-                    <p className="text-gray-500 text-sm mt-1 flex items-center gap-1">
+                    <p className="text-gray-500 text-sm flex items-center gap-1 leading-relaxed">
                       📍 {pg?.branch?.address || pg?.branch?.location?.address}
                     </p>
 
-                    {/* Price */}
-                    <p className="text-blue-700 font-bold mt-2 text-lg">
-                      {pg?.category === "Pg"
-                        ? `₹${pg?.price}/month`
-                        : `₹${pg?.rentperNight}/night`}
-                    </p>
-
-                    {/* Room Type & Occupancy */}
-                    <p className="text-gray-600 text-sm">
-                      <strong>Type:</strong> {pg?.type} | <strong>Occupied:</strong> {pg?.occupied}/{pg?.count || "N/A"}
-                    </p>
-
-                    {/* Allowed / Not Allowed */}
-                    <p className="text-gray-600 text-sm">
-                      <strong>Allowed For:</strong> {pg?.allowedFor}
-                    </p>
-                    {pg?.notAllowed?.length > 0 && (
-                      <p className="text-gray-600 text-sm">
-                        <strong>Not Allowed:</strong> {pg.notAllowed.join(", ")}
-                      </p>
-                    )}
-
-                    {/* Verified */}
-                    <p className={`text-sm font-semibold ${pg.verified ? "text-green-600" : "text-red-600"}`}>
-                      {pg.verified ? "Verified" : "Not Verified"}
-                    </p>
-
-                    {/* Facilities */}
+                    {/* Feature Chips (colorful) */}
                     <div className="flex flex-wrap gap-2 mt-2">
-                      {pg?.facilities?.map((fac, idx) => (
-                        <span
-                          key={idx}
-                          className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-semibold shadow-sm"
-                        >
-                          {fac}
-                        </span>
-                      ))}
+                      {pg?.facilities?.slice(0, 3).map((f, idx) => {
+                        const colors = [
+                          "bg-blue-100 text-blue-700",
+                          "bg-green-100 text-green-700",
+                          "bg-purple-100 text-purple-700",
+                          "bg-pink-100 text-pink-700",
+                          "bg-yellow-100 text-yellow-700",
+                        ];
+                        return (
+                          <span
+                            key={idx}
+                            className={`text-xs px-2 py-1 rounded-full shadow-sm font-medium ${colors[idx % colors.length]}`}
+                          >
+                            {f}
+                          </span>
+                        );
+                      })}
+
+                      {pg?.facilities?.length > 3 && (
+                        <span className="text-xs text-gray-400 font-medium">+ {pg.facilities.length - 3} more</span>
+                      )}
                     </div>
 
-                    {/* Rules */}
-                    {pg?.rules?.length > 0 && (
-                      <div className="mt-2">
-                        <p className="text-gray-600 font-medium text-sm">Rules:</p>
-                        <ul className="list-disc list-inside text-gray-500 text-sm">
-                          {pg.rules.map((rule, idx) => (
-                            <li key={idx}>{rule}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
+                    {/* Verified Status */}
+                    <p
+                      className={`text-xs font-semibold mt-1 ${pg.verified ? "text-green-600" : "text-red-500"
+                        }`}
+                    >
+                      {pg.verified ? "✔ Verified Host" : "⛔ Not Verified"}
+                    </p>
 
-                    {/* Publish Status */}
-                    {pg?.toPublish?.status && (
-                      <p className="text-gray-500 text-xs mt-2">
-                        Published on: {new Date(pg.toPublish.date).toLocaleDateString()}
+                    {/* Price & Occupancy */}
+                    <div className="mt-4 flex justify-between items-center">
+                      <p className="text-xl font-bold text-gray-900">
+                        {pg?.category === "Pg"
+                          ? `₹${pg?.price}/month`
+                          : `₹${pg?.rentperNight}/night`}
                       </p>
-                    )}
 
-                    {/* Divider */}
-                    <div className="border-b border-gray-200 my-2"></div>
+                      <p className="text-xs text-gray-500 font-medium">
+                        {pg?.occupied}/{pg?.count} occupied
+                      </p>
+                    </div>
                   </div>
                 </div>
               ))
@@ -244,6 +235,7 @@ export default function LandingPage() {
             )}
           </div>
         </div>
+
       )}
 
 

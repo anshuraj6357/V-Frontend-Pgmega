@@ -12,7 +12,7 @@ import { useGetPgByIdQuery } from "../Bothfeatures/features/api/allpg.js";
 import { useRazorpayPaymentVerifyMutation, useRazorpayPaymentMutation } from "../Bothfeatures/features2/api/paymentapi";
 
 
-
+const api=process.env.REACT_APP_API_URL;
 
 // ------------------ RAZORPAY PAYMENT FUNCTION ------------------
 async function startPayment(amount, razorpayPayment, razorpayPaymentVerify) {
@@ -30,7 +30,7 @@ async function startPayment(amount, razorpayPayment, razorpayPaymentVerify) {
 
     // 2️⃣ Razorpay Payment Options
     const options = {
-      key: "rzp_live_Rn8nwfw3Hdmb8E",
+      key: "",
       amount: order.amount,
       currency: order.currency,
       name: "Roomgi.com",

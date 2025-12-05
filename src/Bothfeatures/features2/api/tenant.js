@@ -25,12 +25,20 @@ const TenantApi = createApi({
                 url: `GetTenantsByBranch`
             })
         }),
+        onlinepaidtenant: builder.mutation({
+            query: (data) => ({
+                url: `onlineadddtenant`,
+                method: "post",
+                body: data  // always send object
+            })
+        }),
+
         getallactivetenant: builder.query({
             query: (selectedBranch) => ({
                 url: `activetenant/${selectedBranch}`
             })
         }),
-         getAllTenantByBranchId: builder.query({
+        getAllTenantByBranchId: builder.query({
             query: (id) => ({
                 url: `GetTenantsByBranchid/${id}`
             })
@@ -41,20 +49,20 @@ const TenantApi = createApi({
             })
         }),
         updateTenant: builder.mutation({
-            query: ({formdata,id}) => ({
+            query: ({ formdata, id }) => ({
                 url: `update/${id}`,
                 method: 'put',
                 body: formdata,
             })
         }),
 
-         changeStatus: builder.query({
+        changeStatus: builder.query({
             query: (id) => ({
                 url: `markinctive/${id}`,
                 method: 'post',
             })
         }),
-          getStatus: builder.query({
+        getStatus: builder.query({
             query: (status) => ({
                 url: `allstatus/${status}`,
 
@@ -65,6 +73,7 @@ const TenantApi = createApi({
 
 });
 export const { useAddTenantMutation,
+    useOnlinepaidtenantMutation,
     useGetallactivetenantQuery,
     useGetStatusQuery,
     useGetAllTenantQuery,

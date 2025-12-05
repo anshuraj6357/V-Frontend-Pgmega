@@ -10,13 +10,12 @@ import Footer from "../components/Footer";
 import AuthModal from "../components/AuthModal";
 import { useGetPgByIdQuery } from "../Bothfeatures/features/api/allpg.js";
 import { useRazorpayPaymentVerifyMutation, useRazorpayPaymentMutation } from "../Bothfeatures/features2/api/paymentapi";
-
+import { useOnlinepaidtenantMutation } from "../Bothfeatures/features2/api/tenant";
 
 
 // ------------------ RAZORPAY PAYMENT FUNCTION ------------------
-async function startPayment(amount, razorpayPayment, razorpayPaymentVerify) {
+async function startPayment(amount, razorpayPayment, razorpayPaymentVerify, id, onlinepaidtenant) {
   try {
-    // 1️⃣ Create Order via RTK Query
     const { data: orderData, error } = await razorpayPayment({ amount: amount * 100 });
 
     if (error || !orderData?.order) {
@@ -25,56 +24,45 @@ async function startPayment(amount, razorpayPayment, razorpayPaymentVerify) {
     }
 
     const order = orderData.order;
-    console.log("Order:", order);
 
-    // 2️⃣ Razorpay Payment Options
     const options = {
-      key: "",
+      key: "rzp_live_Rn8nwfw3Hdmb8E",
       amount: order.amount,
       currency: order.currency,
       name: "Roomgi.com",
       description: "PG/hotel/rental room Booking Payment",
       order_id: order.id,
 
-      handler: async function (response) {
-        // 3️⃣ Verify Payment
-        const { data: verifyData, error: verifyError } = await razorpayPaymentVerify(response);
+      handler: async function (response ) {
+        const { data: verifyData, error: verifyError } = await razorpayPaymentVerify({
+          razorpay_order_id: response.razorpay_order_id,
+          razorpay_payment_id: response.razorpay_payment_id,
+          razorpay_signature: response.razorpay_signature,
+          roomId: id,
+          amount: amount,
+        });
 
         if (verifyError || !verifyData?.success) {
-          if (verifyError) {
-            console.log("verifyError", verifyError)
-          }
-          if (!verifyData?.success) {
-            console.log("!verifyData?.success", !verifyData?.success)
-          }
-
-
           toast.error("Payment Verification Failed ❌");
         } else {
           toast.success("Payment Successful ✔");
+          await onlinepaidtenant(id);  // ⭐ FIXED — NOW WORKS
         }
       },
-
-      prefill: {
-        name: "Guest User",
-        email: "guest@example.com",
-      },
-
+      prefill: { name: "Guest User", email: "guest@example.com" },
       theme: { color: "#3399cc" },
     };
 
     const rzp = new window.Razorpay(options);
     rzp.open();
-
   } catch (err) {
-    console.log(err);
     toast.error("Payment Error!");
   }
 }
 
-
 export default function PGDetailsPage() {
   const navigate = useNavigate();
+  const [onlinepaidtenant, { data: addtenantdata, isLoading: tenantloading, error }] = useOnlinepaidtenantMutation()
 
   const [razorpayPayment, { isLoading: razorpaypaymentloading }] = useRazorpayPaymentMutation();
   const [razorpayPaymentVerify] = useRazorpayPaymentVerifyMutation();
@@ -107,7 +95,7 @@ export default function PGDetailsPage() {
 
   const handleBook = (amount) => {
     // if (!isAuthenticated) return setIsAuthModalOpen(true);
-    startPayment(amount, razorpayPayment, razorpayPaymentVerify)
+    startPayment(amount, razorpayPayment, razorpayPaymentVerify, id,onlinepaidtenant)
   };
 
   const handleGetDirections = () => {
@@ -418,7 +406,7 @@ export default function PGDetailsPage() {
                     </span>
                     <span className="text-sm">Currently Occupied</span>
 
-                   
+
                     <span className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-full bg-gray-700 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition">
                       Booking not available
                     </span>

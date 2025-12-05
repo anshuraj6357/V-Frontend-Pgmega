@@ -291,8 +291,25 @@ export default function PGDetailsPage() {
 
                   <div className="flex flex-col">
                     <span className="text-sm text-gray-500 font-medium">Room Type</span>
-                    <p className="text-lg font-semibold text-gray-800 tracking-wide">{pg.type}</p>
+
+                    <p className="text-lg font-semibold text-gray-800 tracking-wide">
+                      {
+                        pg.category === "Hotel" ? (
+                          pg.hoteltype  
+                        ) : pg.category === "Pg" ? (
+                          pg.type       
+                        ) : pg.category === "Rented-Room" ? (
+                          pg.renttype === "Flat-Rent"
+                            ? pg.flattype
+                            : pg.renttype === "Room-Rent"
+                              ? pg.roomtype
+                              : ""
+                        ) : ""
+                      }
+                    </p>
+
                   </div>
+
 
                   <div className="flex flex-col">
                     <span className="text-sm text-gray-500 font-medium">Furnished</span>
@@ -319,8 +336,6 @@ export default function PGDetailsPage() {
                     </div>
 
                   </div>
-
-
                 </div>
               </div>
 
@@ -392,10 +407,10 @@ export default function PGDetailsPage() {
           <InfoBlock title="Rent Details">
             <div className="text-center py-4">
               <p className="text-gray-500 text-sm">
-                {pg.category === "Pg" ? "Rent per Month" : "Rent Options"}
+                {pg.category === "Pg"||pg.category === "Rented-Room" ? "Rent per Month" : "Rent Options"}
               </p>
               <h3 className="text-4xl font-bold text-gray-900 mt-1">
-                {pg.category === "Pg"
+                {pg.category === "Pg"||pg.category === "Rented-Room"
                   ? `₹${pg.price}`
                   : <></>}
               </h3>
@@ -410,7 +425,7 @@ export default function PGDetailsPage() {
                   <Loader2 className="w-5 h-5 animate-spin" />
                   <span>Processing Payment...</span>
                 </button>
-              ) : pg.category === "Pg" ? (
+              ) : pg.category === "Pg"||pg.category === "Rented-Room" ? (
                 // Monthly PG Booking
                 <button
                   onClick={() => isAuthenticated && pg.availabilityStatus === "Available" && handleBook(pg.price)}

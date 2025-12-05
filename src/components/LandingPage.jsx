@@ -200,7 +200,7 @@ export default function LandingPage() {
 
                   <div className="mt-3 sm:mt-4 flex justify-between items-center">
                     <p className="text-lg sm:text-xl font-bold text-gray-900">
-                      {pg?.category === "Pg"
+                      {pg?.category === "Pg"||pg.category === "Rented-Room"
                         ? `₹${pg?.price}/month`
                         : `₹${pg?.rentperNight}/night`}
                     </p>
